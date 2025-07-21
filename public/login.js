@@ -4,8 +4,8 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   const email = encodeURIComponent(document.getElementById('email').value.trim());
   const contrasena = encodeURIComponent(document.getElementById('password').value.trim());
   const mensaje = document.getElementById('mensaje');
-
-const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+  
+const url = `/api/login?email=${email}&contrasena=${contrasena}`;
 
   try {
     const response = await fetch(url);
