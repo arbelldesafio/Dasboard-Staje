@@ -11,6 +11,8 @@ export default async function handler(req, res) {
     const response = await fetch(url);
     const text = await response.text();
 
+    return res.status(500).send(text);
+
     console.log('Respuesta cruda de GAS:', text);
 
     // Intentá parsear JSON solo si la respuesta es JSON válida
