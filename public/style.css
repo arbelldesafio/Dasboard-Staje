@@ -1,0 +1,251 @@
+/* ----------- ESTILOS ORIGINALES DE style.css (PORTADA) ----------- */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e6f0ff;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.portada {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.imagen-portada {
+  width: 80%;
+  max-width: 850px;
+  border-radius: 12px;
+  margin: auto;
+  display: block;
+}
+
+.botones {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.boton {
+  background-color: #32a8f4;
+  color: white;
+  padding: 20px 50px;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.boton:hover {
+  background-color: #004080;
+  transform: translateY(-2px);
+}
+
+.seccion {
+  background-color: white;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.seccion h2 {
+  color: #005eb8;
+}
+
+.seccion h3 {
+  margin-top: 30px;
+  color: #004080;
+}
+
+.seccion ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.seccion ul li {
+  margin: 10px 0;
+}
+
+.seccion ul li a {
+  color: #005eb8;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.seccion ul li a:hover {
+  text-decoration: underline;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #e3f2fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: #32A8F4; /* antes era white */
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-container h2 {
+  margin-bottom: 30px;
+  color: #0d47a1;
+}
+
+.login-container input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.login-container button {
+  background-color: #1976d2;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #0d47a1;
+}
+
+#error-msg {
+  color: red;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+/* ----------- ESTILOS ORIGINALES DE style1.css (LOGIN/DASHBOARD BÁSICO) ----------- */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e8f0fe;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container, .dashboard-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 400px;
+  text-align: center;
+}
+
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 90%;
+}
+
+button {
+  background-color: #0b66c3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+a {
+  color: #0b66c3;
+  text-decoration: none;
+  display: block;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+/* ----------- ESTILOS ORIGINALES DE stylesesion.css (LOGIN FINAL CON LOGO) ----------- */
+body.login-body {
+  background-color: #e6f0fa;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container {
+  background-color: #2196f3;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 320px;
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.login-container h2 {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+button {
+  background-color: #0b60d1;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #084aad;
+}
+
+.mensaje-error {
+  color: #ffcccc;
+  margin-top: 10px;
+}
