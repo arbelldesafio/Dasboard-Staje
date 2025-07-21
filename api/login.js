@@ -9,7 +9,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://script.google.com/macros/s/1JKB7rXi3YQcGJ95F9EOXhufvuIOy/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+const url = `https://script.google.com/macros/s/AKfycbwrBw38gn7gQd0vIjzGWzGyqqu7WXusOZT9RQkfWGfnu3KMmo1JxUR47F6C1MHGzdg/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+
     console.log('Llamando a URL:', url);
 
     const response = await fetch(url);
