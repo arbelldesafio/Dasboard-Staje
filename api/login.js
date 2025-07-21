@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://script.google.com/macros/s/AKfycbwrBw38gn7gQd0vIjzGWzGyqqu7WXusOZT9RQkfWGfnu3KMmo1JxUR47F6C1MHGzdg/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+    const url = `https://script.google.com/macros/s/AKfycbzMdkstSNFgsJrANoEGqKtznpSV8dMqNwBTPwMuJHNkbVTR3mgjIqAEkSBloPHQl00K/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
     console.log('Llamando a URL:', url);
 
     // Nota: fetch está disponible en Node 18+ en Vercel, si no, necesitás importar node-fetch
