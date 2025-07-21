@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
-  console.log('Handler started');
+  console.log('API /api/login llamada');
   const { email, contrasena } = req.query;
-  console.log('Recibido:', email, contrasena);
+  console.log('Parametros recibidos:', { email, contrasena });
 
   if (!email || !contrasena) {
     console.log('Faltan credenciales');
@@ -9,22 +9,24 @@ export default async function handler(req, res) {
   }
 
   try {
-const url = `https://script.google.com/macros/s/AKfycbwrBw38gn7gQd0vIjzGWzGyqqu7WXusOZT9RQkfWGfnu3KMmo1JxUR47F6C1MHGzdg/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
-
+    const url = `https://script.google.com/macros/s/AKfycbwrBw38gn7gQd0vIjzGWzGyqqu7WXusOZT9RQkfWGfnu3KMmo1JxUR47F6C1MHGzdg/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
     console.log('Llamando a URL:', url);
 
+    // Nota: fetch está disponible en Node 18+ en Vercel, si no, necesitás importar node-fetch
+
     const response = await fetch(url);
+
     if (!response.ok) {
-      console.log('Error HTTP:', response.status, response.statusText);
+      console.error('Respuesta HTTP no OK:', response.status, response.statusText);
       return res.status(500).json({ success: false, message: 'Error en Google Apps Script' });
     }
 
     const data = await response.json();
-    console.log('Datos recibidos:', data);
+    console.log('Datos recibidos de GAS:', data);
     return res.status(200).json(data);
 
   } catch (error) {
-    console.log('Error catch:', error);
+    console.error('Error atrapado en catch:', error);
     return res.status(500).json({ success: false, message: 'Error interno en servidor' });
   }
 }
