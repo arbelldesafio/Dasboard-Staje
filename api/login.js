@@ -8,10 +8,10 @@ export default async function handler(req, res) {
 
     const url = `https://script.google.com/macros/s/AKfycbwZMhStNy4r11TJl4ul77i5eePxs-90AkAKHfb8An8m7eHhZHuFLShXkOtMhL9v8BG2/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
 
-    const response = await fetch(url);
+ const response = await fetch(url);
     const text = await response.text();
-
-    return res.status(500).send(text);
+    
+    return res.status(response.status).send(text);
 
     console.log('Respuesta cruda de GAS:', text);
 
