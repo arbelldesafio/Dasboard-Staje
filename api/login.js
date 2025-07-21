@@ -1,29 +1,26 @@
 export default async function handler(req, res) {
-  console.log('API /api/login llamada');
-  const { email, contrasena } = req.query;
-  console.log('Parametros recibidos:', { email, contrasena });
-
-  if (!email || !contrasena) {
-    console.log('Faltan credenciales');
-    return res.status(400).json({ success: false, message: 'Faltan credenciales' });
-  }
-
   try {
-    const url = `https://script.google.com/macros/s/AKfycbzMdkstSNFgsJrANoEGqKtznpSV8dMqNwBTPwMuJHNkbVTR3mgjIqAEkSBloPHQl00K/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
-    console.log('Llamando a URL:', url);
+    const { email, contrasena } = req.query;
 
-    // Nota: fetch está disponible en Node 18+ en Vercel, si no, necesitás importar node-fetch
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      console.error('Respuesta HTTP no OK:', response.status, response.statusText);
-      return res.status(500).json({ success: false, message: 'Error en Google Apps Script' });
+    if (!email || !contrasena) {
+      return res.status(400).json({ success: false, message: 'Faltan credenciales' });
     }
 
-    const data = await response.json();
-    console.log('Datos recibidos de GAS:', data);
-    return res.status(200).json(data);
+    const url = `https://script.google.com/macros/s/AKfycbzgSt-kQENX5lO7ch1mvos4U8sJHyJh6Zar-tL1qBE2ZH7OcHDiEeDFq7YS7CNLAKqh/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+
+    const response = await fetch(url);
+    const text = await response.text();
+
+    console.log('Respuesta cruda de GAS:', text);
+
+    // Intentá parsear JSON solo si la respuesta es JSON válida
+    try {
+      const data = JSON.parse(text);
+      return res.status(200).json(data);
+    } catch (parseError) {
+      console.error('No es JSON válido:', parseError);
+      return res.status(500).json({ success: false, message: 'Respuesta inválida del servidor externo' });
+    }
 
   } catch (error) {
     console.error('Error atrapado en catch:', error);
