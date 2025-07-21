@@ -5,7 +5,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   const contrasena = encodeURIComponent(document.getElementById('password').value.trim());
   const mensaje = document.getElementById('mensaje');
 
-  const url = `https://script.google.com/macros/s/AKfycbzbJafkw2LaCDqYHKT31cB-TMVAh01AZdWshjTY3GifFftY6BeA1nrQ7YN3ra_8jA2I/exec?email=${email}&contrasena=${contrasena}`;
+  const url = `https://script.google.com/macros/s/AKfycbwiQ5to7rwf5pb335D6U2Cuc7kCF1ze-HIElp7x7tGHqsg7WCdQ8P37qCNbFPB4bfs/exec?email=${email}&contrasena=${contrasena}`;
 
   try {
     const response = await fetch(url);
