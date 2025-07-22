@@ -71,15 +71,42 @@
     <h2>SEGUIMIENTO – PERIODO 3 Y 4</h2>
 
     <h3>NUEVAS INCORPORACIONES</h3>
-    <a class="boton-link" href="https://docs.google.com/spreadsheets/d/URL1" target="_blank">Nueva Inco A Cargo</a>
-    <a class="boton-link" href="https://docs.google.com/spreadsheets/d/URL2" target="_blank">Nueva Inco de Equipo de Líder Integra</a>
+    <a class="boton-link" href="" target="_blank" id="links-nuevas">Nueva Inco A Cargo</a>
+    <a class="boton-link" href="" target="_blank">Nueva Inco de Equipo de Líder Integra</a>
 
     <h3>INCORPORADORES</h3>
-    <a class="boton-link" href="https://docs.google.com/spreadsheets/d/URL3" target="_blank">Inco A Cargo</a>
-    <a class="boton-link" href="https://docs.google.com/spreadsheets/d/URL4" target="_blank">Inco de Equipo de Líder Integra</a>
+    <a class="boton-link" href="" target="_blank" id="links-incorpo">Inco A Cargo</a>
+    <a class="boton-link" href="" target="_blank">Inco de Equipo de Líder Integra</a>
 
     <a class="boton-link boton-volver" href="dashboard.html">VOLVER AL INICIO</a>
 
   </div>
+   <script>
+    const distribuidor = sessionStorage.getItem("distribuidor");
+
+    if (!distribuidor) {
+      window.location.href = "index.html";
+    }
+
+    // Mapa base con IDs de hojas y filtros por distribuidor
+    const sheetUrls = {
+      "NUEVAS_INCORPORACIONES": "https://docs.google.com/spreadsheets/d/1JKB7rXi3YQcGJ95F9EOXhufvuIOy-Rg2awJ4GzfpVaQ/edit?pli=1&gid=0#gid=0",
+      "INCORPORADORES": "https://docs.google.com/spreadsheets/d/ID_DE_TU_HOJA/edit#gid=123456"
+    };
+
+    // 👇 Filtro personalizado para cada URL usando el valor del distribuidor
+    const filtroDistribuidor = encodeURIComponent(distribuidor);
+
+    const linksNuevas = document.getElementById("links-nuevas");
+    const linksIncorpo = document.getElementById("links-incorpo");
+
+    linksNuevas.innerHTML = `
+      <a class="boton-link" target="_blank" href="${sheetUrls.NUEVAS_INCORPORACIONES}&fvid=${filtroDistribuidor}">Nueva Inco A Cargo</a>
+    `;
+
+    linksIncorpo.innerHTML = `
+      <a class="boton-link" target="_blank" href="${sheetUrls.INCORPORADORES}&fvid=${filtroDistribuidor}">Inco A Cargo</a>
+    `;
+  </script>
 </body>
 </html>
