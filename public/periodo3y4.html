@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PERÍODO 3 Y 4</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #4096ec;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .seccion {
+      background-color: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #005aa7;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      color: #003366;
+      margin-top: 30px;
+      text-transform: uppercase;
+    }
+
+    .boton-link {
+      display: block;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      margin: 10px auto;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background-color 0.2s ease;
+    }
+
+    .boton-link:hover {
+      background-color: #005aa7;
+    }
+
+    .boton-volver {
+      margin-top: 40px;
+      background-color: #6c757d;
+    }
+
+    .boton-volver:hover {
+      background-color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <div class="seccion">
+    <h2>SEGUIMIENTO – PERIODO 3 Y 4</h2>
+<p id="bienvenida" style="font-weight: bold; color: #333;"></p>
+    <h3>NUEVAS INCORPORACIONES</h3>
+    <a class="boton-link" href="" target="_blank" id="links-nuevas1">Nueva Inco A Cargo</a>
+    <a class="boton-link" href="" target="_blank" id="links-nuevas2">Nueva Inco de Equipo de Líder Integra</a>
+
+    <h3>INCORPORADORES</h3>
+    <a class="boton-link" href="" target="_blank" id="links-incorpo1">Inco A Cargo</a>
+    <a class="boton-link" href="" target="_blank" id="links-incorpo2">Inco de Equipo de Líder Integra</a>
+
+    <a class="boton-link boton-volver" href="dashboard.html">VOLVER AL INICIO</a>
+
+  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const distribuidor = localStorage.getItem("distribuidor");
+    if (!distribuidor) {
+      alert("Sesión caducada. Volvé a iniciar sesión.");
+      window.location.href = "./index.html";
+      return;
+    }
+
+fetch(`/api/link?distribuidor=${encodeURIComponent(distribuidor)}`)
+  .then(res => res.json())
+  .then(data => {
+    console.log("Respuesta del backend:", data);
+
+    if (!data.success || !data.rows || data.rows.length < 4) {
+      alert("No se encontraron suficientes enlaces para mostrar.");
+      return;
+    }
+
+    document.getElementById('links-nuevas1').href = data.rows[0][5];
+    document.getElementById('links-nuevas2').href = data.rows[1][6];
+    document.getElementById('links-incorpo1').href = data.rows[2][7];
+    document.getElementById('links-incorpo2').href = data.rows[3][9];
+  })
+  .catch(error => {
+    console.error("Error al obtener links:", error);
+    alert("Error al cargar los enlaces filtrados.");
+  });
+});
+</script>
+</body>
+</html>
