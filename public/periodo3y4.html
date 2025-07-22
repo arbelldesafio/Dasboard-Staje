@@ -92,29 +92,33 @@
       }
       
     fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success && !data.rows) {
-          throw new Error("Sin datos");
-        }
+  .then(async res => {
+    const text = await res.text(); // obtené respuesta en crudo
+    console.log("Respuesta cruda del servidor:", text);
 
-        const filas = data.rows;
+    try {
+      const data = JSON.parse(text);
+      if (!data.success || !data.rows) throw new Error("Sin datos");
 
-        // Asegurate que haya al menos 4 filas
-        if (filas.length >= 4) {
-          document.getElementById('links-nuevas1').href = filas[0][3];
-          document.getElementById('links-nuevas2').href = filas[1][3];
-          document.getElementById('links-incorpo1').href = filas[2][3];
-          document.getElementById('links-incorpo2').href = filas[3][3];
-        }
+      // Asignar enlaces
+      const filas = data.rows;
+      if (filas.length >= 4) {
+        document.getElementById('links-nuevas1').href = filas[0][3];
+        document.getElementById('links-nuevas2').href = filas[1][3];
+        document.getElementById('links-incorpo1').href = filas[2][3];
+        document.getElementById('links-incorpo2').href = filas[3][3];
+      }
 
-        document.getElementById('contenido-dinamico').style.display = 'block';
-      })
-      .catch(error => {
-        console.error("Error al obtener links:", error);
-        alert("Error al cargar los enlaces filtrados.");
-      });
+    } catch (err) {
+      console.error("Error parseando JSON:", err);
+      alert("Error al cargar los enlaces filtrados.");
+    }
+  })
+  .catch(error => {
+    console.error("Error de red:", error);
+    alert("Error al conectar con el servidor.");
   });
+
 </script>
 </body>
 </html>
