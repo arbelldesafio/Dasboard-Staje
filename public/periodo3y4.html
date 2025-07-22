@@ -1,112 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PERÍODO 3 Y 4</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #4096ec;
-      margin: 0;
-      padding: 40px 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .seccion {
-      background-color: white;
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 600px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      font-size: 24px;
-      color: #005aa7;
-      margin-bottom: 30px;
-      text-transform: uppercase;
-    }
-
-    h3 {
-      color: #003366;
-      margin-top: 30px;
-      text-transform: uppercase;
-    }
-
-    .boton-link {
-      display: block;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      padding: 12px 20px;
-      margin: 10px auto;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: background-color 0.2s ease;
-    }
-
-    .boton-link:hover {
-      background-color: #005aa7;
-    }
-
-    .boton-volver {
-      margin-top: 40px;
-      background-color: #6c757d;
-    }
-
-    .boton-volver:hover {
-      background-color: #495057;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Ingreso</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="seccion">
-    <h2>SEGUIMIENTO – PERIODO 3 Y 4</h2>
+  <div class="login-container">
+    <h2>INGRESO</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Correo" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+    </form>
 
-    <h3>NUEVAS INCORPORACIONES</h3>
-    <a class="boton-link" href="" target="_blank" id="links-nuevas">Nueva Inco A Cargo</a>
-    <a class="boton-link" href="" target="_blank">Nueva Inco de Equipo de Líder Integra</a>
+    <div id="contenido-dinamico" style="display:none;">
+      <h3>NUEVAS INCORPORACIONES</h3>
+      <a class="boton-link" href="" target="_blank" id="links-nuevas1">Nueva Inco A Cargo</a>
+      <a class="boton-link" href="" target="_blank" id="links-nuevas2">Nueva Inco de Equipo de Líder Integra</a>
 
-    <h3>INCORPORADORES</h3>
-    <a class="boton-link" href="" target="_blank" id="links-incorpo">Inco A Cargo</a>
-    <a class="boton-link" href="" target="_blank">Inco de Equipo de Líder Integra</a>
-
-    <a class="boton-link boton-volver" href="dashboard.html">VOLVER AL INICIO</a>
-
+      <h3>INCORPORADORES</h3>
+      <a class="boton-link" href="" target="_blank" id="links-incorpo1">Inco A Cargo</a>
+      <a class="boton-link" href="" target="_blank" id="links-incorpo2">Inco de Equipo de Líder Integra</a>
+    </div>
   </div>
-   <script>
-    const distribuidor = sessionStorage.getItem("distribuidor");
 
-    if (!distribuidor) {
-      window.location.href = "index.html";
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyxeAgGZ_NSFttPsUj5ufcHP3_lc7-IpTT9E_AVY_Jy0eGSpkQS4ZklYXf7tzH0yMn2/exec'; // Tu URL pública de Apps Script
+
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      fetch(`${scriptURL}?email=${email}&contrasena=${password}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            cargarLinks(data.distribuidor);
+          } else {
+            alert("Credenciales incorrectas");
+          }
+        })
+        .catch(err => {
+          alert("Error al conectar con el servidor");
+          console.error(err);
+        });
+    });
+
+    function cargarLinks(distribuidor) {
+      fetch(`${scriptURL}?distribuidor=${encodeURIComponent(distribuidor)}`)
+        .then(res => res.json())
+        .then(data => {
+          const filas = data.rows;
+
+          // Asigna los primeros links de cada sección según el orden
+          document.getElementById('links-nuevas1').href = filas[0][3]; // suponiendo que columna 3 = enlace
+          document.getElementById('links-nuevas2').href = filas[1][3];
+          document.getElementById('links-incorpo1').href = filas[2][3];
+          document.getElementById('links-incorpo2').href = filas[3][3];
+
+          document.getElementById('contenido-dinamico').style.display = 'block';
+          document.getElementById('login-form').style.display = 'none';
+        })
+        .catch(err => {
+          alert("Error al obtener los datos filtrados");
+          console.error(err);
+        });
     }
-
-    // Mapa base con IDs de hojas y filtros por distribuidor
-    const sheetUrls = {
-      "NUEVAS_INCORPORACIONES": "https://docs.google.com/spreadsheets/d/1JKB7rXi3YQcGJ95F9EOXhufvuIOy-Rg2awJ4GzfpVaQ/edit?pli=1&gid=0#gid=0",
-      "INCORPORADORES": "https://docs.google.com/spreadsheets/d/ID_DE_TU_HOJA/edit#gid=123456"
-    };
-
-    // 👇 Filtro personalizado para cada URL usando el valor del distribuidor
-    const filtroDistribuidor = encodeURIComponent(distribuidor);
-
-    const linksNuevas = document.getElementById("links-nuevas");
-    const linksIncorpo = document.getElementById("links-incorpo");
-
-    linksNuevas.innerHTML = `
-      <a class="boton-link" target="_blank" href="${sheetUrls.NUEVAS_INCORPORACIONES}&fvid=${filtroDistribuidor}">Nueva Inco A Cargo</a>
-    `;
-
-    linksIncorpo.innerHTML = `
-      <a class="boton-link" target="_blank" href="${sheetUrls.INCORPORADORES}&fvid=${filtroDistribuidor}">Inco A Cargo</a>
-    `;
   </script>
 </body>
 </html>

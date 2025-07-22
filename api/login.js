@@ -6,12 +6,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Faltan credenciales' });
     }
 
-    const url = `https://script.google.com/macros/s/AKfycbyl8BuWeZZWKQ0SMyv8Wt6TS2rkQEwYoic4y2LnGI7owdbWOazSnWKuw5k1Fn6NqY_p/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+    const url = `https://script.google.com/macros/s/AKfycbyxeAgGZ_NSFttPsUj5ufcHP3_lc7-IpTT9E_AVY_Jy0eGSpkQS4ZklYXf7tzH0yMn2/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
 
  const response = await fetch(url);
     const text = await response.text();
     
     return res.status(response.status).send(text);
+  
 
     // Intentá parsear JSON solo si la respuesta es JSON válida
     try {
