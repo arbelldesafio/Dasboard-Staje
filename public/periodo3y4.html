@@ -83,7 +83,7 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const distribuidor = sessionStorage.getItem("distribuidor");
+      const distribuidor = localStorage.getItem("distribuidor");
       document.getElementById("bienvenida").textContent = `Bienvenido, ${distribuidor}`;
       if (!distribuidor) {
         alert("Sesión caducada. Volvé a iniciar sesión.");
@@ -94,7 +94,7 @@
     fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
       .then(res => res.json())
       .then(data => {
-      if (!data.success || !data.rows) {
+        if (!data.success && !data.rows) {
           throw new Error("Sin datos");
         }
 

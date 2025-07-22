@@ -66,8 +66,8 @@
     <img src="portada.jpg" alt="Seguimiento de Desafíos" class="imagen-portada" />
   </div>
   <script>
-    const distribuidor = sessionStorage.getItem("distribuidor");
-    const usuario = sessionStorage.getItem("usuario");
+    const distribuidor = localStorage.getItem("distribuidor");
+    const usuario = localStorage.getItem("usuario");
 
     if (!distribuidor) {
       // Si no hay sesión, redirigir al login
@@ -77,7 +77,7 @@
     }
 
     function logout() {
-      sessionStorage.clear();
+      localStorage.clear();
       window.location.href = "index.html";
     }
   </script>
