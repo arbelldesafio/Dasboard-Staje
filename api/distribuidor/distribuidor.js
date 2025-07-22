@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`https://script.google.com/macros/s/AKfycbyxeAgGZ_NSFttPsUj5ufcHP3_lc7-IpTT9E_AVY_Jy0eGSpkQS4ZklYXf7tzH0yMn2/exec?distribuidor=${encodeURIComponent(distribuidor)}`);
+    const response = await fetch(`https://script.google.com/macros/s/AKfycbzkOF8vOphZKysealkkNiVoLkjLYRy2jxx10piLYDyY7B2VznC8Gfa9bwcbzK4R_IvX/exec?distribuidor=${encodeURIComponent(distribuidor)}`);
     const data = await response.json();
 
     return res.status(200).json(data);
