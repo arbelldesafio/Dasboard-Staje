@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PERÍODO 3 Y 4</title>
   <style>
     body {
@@ -13,6 +13,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
     }
 
     .seccion {
@@ -27,8 +28,14 @@
     h2 {
       font-size: 24px;
       color: #005aa7;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       text-transform: uppercase;
+    }
+
+    #bienvenida {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 30px;
     }
 
     h3 {
@@ -69,47 +76,55 @@
 <body>
   <div class="seccion">
     <h2>SEGUIMIENTO – PERIODO 3 Y 4</h2>
-<p id="bienvenida" style="font-weight: bold; color: #333;"></p>
+    <p id="bienvenida">Cargando distribuidor...</p>
+
     <h3>NUEVAS INCORPORACIONES</h3>
-    <a class="boton-link" href="" target="_blank" id="links-nuevas1">Nueva Inco A Cargo</a>
-    <a class="boton-link" href="" target="_blank" id="links-nuevas2">Nueva Inco de Equipo de Líder Integra</a>
+    <a class="boton-link" href="#" target="_blank" id="links-nuevas1">Nueva Inco A Cargo</a>
+    <a class="boton-link" href="#" target="_blank" id="links-nuevas2">Nueva Inco de Equipo de Líder Integra</a>
 
     <h3>INCORPORADORES</h3>
-    <a class="boton-link" href="" target="_blank" id="links-incorpo1">Inco A Cargo</a>
-    <a class="boton-link" href="" target="_blank" id="links-incorpo2">Inco de Equipo de Líder Integra</a>
+    <a class="boton-link" href="#" target="_blank" id="links-incorpo1">Inco A Cargo</a>
+    <a class="boton-link" href="#" target="_blank" id="links-incorpo2">Inco de Equipo de Líder Integra</a>
 
     <a class="boton-link boton-volver" href="dashboard.html">VOLVER AL INICIO</a>
-
   </div>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const distribuidor = localStorage.getItem("distribuidor");
-    if (!distribuidor) {
-      alert("Sesión caducada. Volvé a iniciar sesión.");
-      window.location.href = "./index.html";
-      return;
-    }
 
-fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
-  .then(res => res.json())
-  .then(data => {
-    console.log("Respuesta del backend:", data);
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const distribuidor = localStorage.getItem("distribuidor");
+      if (!distribuidor) {
+        alert("Sesión caducada. Volvé a iniciar sesión.");
+        window.location.href = "./index.html";
+        return;
+      }
 
-    if (!data.success || !data.rows || data.rows.length < 4) {
-      alert("No se encontraron suficientes enlaces para mostrar.");
-      return;
-    }
+      fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("Respuesta del backend:", data);
 
-    document.getElementById('links-nuevas1').href = data.rows[0][5];
-    document.getElementById('links-nuevas2').href = data.rows[1][6];
-    document.getElementById('links-incorpo1').href = data.rows[2][7];
-    document.getElementById('links-incorpo2').href = data.rows[3][9];
-  })
-  .catch(error => {
-    console.error("Error al obtener links:", error);
-    alert("Error al cargar los enlaces filtrados.");
-  });
-});
-</script>
+          if (!data.success || !data.rows || data.rows.length === 0) {
+            alert("No se encontraron enlaces para mostrar.");
+            return;
+          }
+
+          // Solo usamos la primera fila (filtrada por distribuidor)
+          const row = data.rows[0];
+
+          // Mostrar el nombre del distribuidor en la bienvenida
+          document.getElementById('bienvenida').textContent = `Bienvenido/a, Distribuidor: ${row[3]}`;
+
+          // Asignar los links a los botones, con fallback si la celda está vacía
+          document.getElementById('links-nuevas1').href = row[5] || "#";
+          document.getElementById('links-nuevas2').href = row[6] || "#";
+          document.getElementById('links-incorpo1').href = row[7] || "#";
+          document.getElementById('links-incorpo2').href = row[9] || "#";
+        })
+        .catch(error => {
+          console.error("Error al obtener links:", error);
+          alert("Error al cargar los enlaces filtrados.");
+        });
+    });
+  </script>
 </body>
 </html>
