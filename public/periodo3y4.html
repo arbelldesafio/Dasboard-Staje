@@ -83,44 +83,34 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const distribuidor = localStorage.getItem("distribuidor");
-      document.getElementById("bienvenida").textContent = `Bienvenido, ${distribuidor}`;
-      if (!distribuidor) {
-        alert("Sesión caducada. Volvé a iniciar sesión.");
-        window.location.href = "./index.html";
-        return;
+  const distribuidor = localStorage.getItem("distribuidor");
+  if (!distribuidor) {
+    alert("Sesión caducada. Volvé a iniciar sesión.");
+    window.location.href = "./index.html";
+    return;
+  }
+
+  fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success || !data.rows || data.rows.length === 0) {
+        throw new Error("Sin datos");
       }
-      
-    fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
-  .then(async res => {
-    const text = await res.text(); // obtené respuesta en crudo
-    console.log("Respuesta cruda del servidor:", text);
 
-    try {
-      const data = JSON.parse(text);
-      if (!data.success || !data.rows) throw new Error("Sin datos");
+      const fila = data.rows[0];
 
-      // Asignar enlaces
-      const filas = data.rows;
-if (filas.length >= 1) {
-  const fila = filas[0]; // Solo una fila con distribuidor
+      document.getElementById('links-nuevas1').href = fila[5] !== "NO TIENE" ? fila[5] : "#";
+      document.getElementById('links-nuevas2').href = fila[6] !== "NO TIENE" ? fila[6] : "#";
+      document.getElementById('links-incorpo1').href = fila[7] !== "NO TIENE" ? fila[7] : "#";
+      document.getElementById('links-incorpo2').href = fila[9] !== "NO TIENE" ? fila[9] : "#";
 
-  document.getElementById('links-nuevas1').href = fila[5] !== "NO TIENE" ? fila[5] : "#";
-  document.getElementById('links-nuevas2').href = fila[6] !== "NO TIENE" ? fila[6] : "#";
-  document.getElementById('links-incorpo1').href = fila[7] !== "NO TIENE" ? fila[7] : "#";
-  document.getElementById('links-incorpo2').href = fila[9] !== "NO TIENE" ? fila[9] : "#";
-}
-
-    } catch (err) {
-      console.error("Error parseando JSON:", err);
+      document.getElementById('contenido-dinamico').style.display = 'block';
+    })
+    .catch(error => {
+      console.error("Error al obtener links:", error);
       alert("Error al cargar los enlaces filtrados.");
-    }
-  })
-  .catch(error => {
-    console.error("Error de red:", error);
-    alert("Error al conectar con el servidor.");
-  });
-
+    });
+});
 </script>
 </body>
 </html>
