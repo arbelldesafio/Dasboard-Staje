@@ -81,32 +81,56 @@
     <a class="boton-link boton-volver" href="dashboard.html">VOLVER AL INICIO</a>
 
   </div>
-   <script>
-    const distribuidor = sessionStorage.getItem("distribuidor");
+  <script>
+  const distribuidor = sessionStorage.getItem("distribuidor");
 
-    if (!distribuidor) {
-      window.location.href = "index.html";
-    }
+  if (!distribuidor) {
+    window.location.href = "index.html";
+  }
 
-    // Mapa base con IDs de hojas y filtros por distribuidor
-    const sheetUrls = {
-      "NUEVAS_INCORPORACIONES": "https://docs.google.com/spreadsheets/d/1JKB7rXi3YQcGJ95F9EOXhufvuIOy-Rg2awJ4GzfpVaQ/edit?pli=1&gid=0#gid=0",
-      "INCORPORADORES": "https://docs.google.com/spreadsheets/d/ID_DE_TU_HOJA/edit#gid=123456"
-    };
+  fetch(`https://script.google.com/macros/s/TU_DEPLOY_ID/exec?distribuidor=${encodeURIComponent(distribuidor)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data?.rows?.length) {
+        document.body.innerHTML += "<p>No se encontraron resultados para tu distribuidor.</p>";
+        return;
+      }
 
-    // 👇 Filtro personalizado para cada URL usando el valor del distribuidor
-    const filtroDistribuidor = encodeURIComponent(distribuidor);
+      const tabla = document.createElement("table");
+      tabla.style.borderCollapse = "collapse";
+      tabla.style.marginTop = "20px";
+      tabla.style.width = "100%";
 
-    const linksNuevas = document.getElementById("links-nuevas");
-    const linksIncorpo = document.getElementById("links-incorpo");
+      // Encabezados
+      const thead = tabla.createTHead();
+      const rowHead = thead.insertRow();
+      data.headers.forEach(h => {
+        const th = document.createElement("th");
+        th.textContent = h;
+        th.style.border = "1px solid #ccc";
+        th.style.padding = "8px";
+        th.style.backgroundColor = "#eee";
+        rowHead.appendChild(th);
+      });
 
-    linksNuevas.innerHTML = `
-      <a class="boton-link" target="_blank" href="${sheetUrls.NUEVAS_INCORPORACIONES}&fvid=${filtroDistribuidor}">Nueva Inco A Cargo</a>
-    `;
+      // Filas
+      const tbody = tabla.createTBody();
+      data.rows.forEach(fila => {
+        const tr = tbody.insertRow();
+        fila.forEach(cell => {
+          const td = tr.insertCell();
+          td.textContent = cell;
+          td.style.border = "1px solid #ccc";
+          td.style.padding = "8px";
+        });
+      });
 
-    linksIncorpo.innerHTML = `
-      <a class="boton-link" target="_blank" href="${sheetUrls.INCORPORADORES}&fvid=${filtroDistribuidor}">Inco A Cargo</a>
-    `;
-  </script>
+      document.body.appendChild(tabla);
+    })
+    .catch(err => {
+      console.error("Error al obtener datos filtrados:", err);
+      document.body.innerHTML += "<p>Error al cargar los datos.</p>";
+    });
+</script>
 </body>
 </html>
