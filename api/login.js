@@ -8,10 +8,10 @@ export default async function handler(req, res) {
 
     const url = `https://script.google.com/macros/s/AKfycbzTmw0t0zUT5bUtPI4Qrp2aUW3BdyQcV1xCe1sFDxeCbvT9F-q_wC7pByQ2fWofvL9Y/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
 
-   const response = await fetch(url);
+ const response = await fetch(url);
     const text = await response.text();
     
-
+    // Intentá parsear JSON solo si la respuesta es JSON válida
     try {
       const data = JSON.parse(text);
       return res.status(200).json(data);

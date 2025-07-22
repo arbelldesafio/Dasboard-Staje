@@ -12,9 +12,9 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     const result = await response.json();
 
     if (result.success) {
-      sessionStorage.setItem("distribuidor", result.distribuidor);
-      sessionStorage.setItem("usuario", result.usuario);
-      sessionStorage.setItem("email", result.email);
+      localStorage.setItem("distribuidor", result.distribuidor);
+      localStorage.setItem("usuario", result.usuario);
+      localStorage.setItem("email", result.email);
 
       mensaje.textContent = `Bienvenido, ${result.distribuidor}!`;
       mensaje.style.color = "lightgreen";
