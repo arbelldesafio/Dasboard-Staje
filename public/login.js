@@ -1,21 +1,20 @@
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const email = encodeURIComponent(document.getElementById('email').value.trim());
-  const contrasena = encodeURIComponent(document.getElementById('password').value.trim());
+  const email = document.getElementById('email').value.trim();
+  const contrasena = document.getElementById('password').value.trim();
   const mensaje = document.getElementById('mensaje');
 
-const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+  const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
 
   try {
     const response = await fetch(url);
     const result = await response.json();
 
     if (result.success) {
-
-    sessionStorage.setItem("distribuidor", result.distribuidor);
-    sessionStorage.setItem("usuario", result.usuario);
-    sessionStorage.setItem("email", result.email);
+      sessionStorage.setItem("distribuidor", result.distribuidor);
+      sessionStorage.setItem("usuario", result.usuario);
+      sessionStorage.setItem("email", result.email);
 
       mensaje.textContent = `Bienvenido, ${result.distribuidor}!`;
       mensaje.style.color = "lightgreen";
@@ -33,4 +32,3 @@ const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeUR
     console.error("Error:", error);
   }
 });
-
