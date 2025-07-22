@@ -53,11 +53,33 @@
 </head>
 <body>
   <div class="portada">
+
+    <h1 id="bienvenida"></h1>
+
+        <button onclick="logout()" style="margin: 20px; padding: 10px 20px; font-size: 16px;">Cerrar sesión</button>
+
+
     <div class="botones">
       <a class="boton" href="periodo3y4.html">PERIODO 3 Y 4</a>
       <a class="boton" href="periodo4y5.html">PERIODO 4 Y 5</a>
     </div>
     <img src="portada.jpg" alt="Seguimiento de Desafíos" class="imagen-portada" />
   </div>
+  <script>
+    const distribuidor = sessionStorage.getItem("distribuidor");
+    const usuario = sessionStorage.getItem("usuario");
+
+    if (!distribuidor) {
+      // Si no hay sesión, redirigir al login
+      window.location.href = "index.html"; // o donde tengas el login
+    } else {
+      document.getElementById("bienvenida").textContent = `Bienvenido/a ${distribuidor}`;
+    }
+
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
 </body>
 </html>

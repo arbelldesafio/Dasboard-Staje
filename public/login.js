@@ -12,7 +12,12 @@ const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeUR
     const result = await response.json();
 
     if (result.success) {
-      mensaje.textContent = `Bienvenido, ${result.distribuidor || result.email}!`;
+
+    sessionStorage.setItem("distribuidor", data.distribuidor);
+    sessionStorage.setItem("usuario", data.usuario);
+    sessionStorage.setItem("email", data.email);
+
+      mensaje.textContent = `Bienvenido, ${result.distribuidor}!`;
       mensaje.style.color = "lightgreen";
 
       setTimeout(() => {
@@ -20,7 +25,7 @@ const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeUR
       }, 1500);
     } else {
       mensaje.textContent = result.message || "Credenciales incorrectas.";
-      mensaje.style.color = "yellow";
+      mensaje.style.color = "red";
     }
   } catch (error) {
     mensaje.textContent = "Error al conectar con el servidor.";
