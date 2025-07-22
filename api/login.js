@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     const text = await response.text();
     
     return res.status(response.status).send(text);
-  
 
     // Intentá parsear JSON solo si la respuesta es JSON válida
     try {
