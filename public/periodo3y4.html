@@ -109,8 +109,8 @@
         }
       })
       .catch(error => {
-        console.error("Error al obtener links:", error);
-        alert("Error al cargar los enlaces filtrados.");
+    console.error("Error en fetch:", error);
+    alert("Error al cargar los enlaces filtrados: " + (error.message || error));
       });
   });
 </script>
