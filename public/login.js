@@ -32,36 +32,22 @@
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const email = document.getElementById('email').value.trim();
-  const contrasena = document.getElementById('password').value.trim();
+  const email = encodeURIComponent(document.getElementById('email').value.trim());
+  const contrasena = encodeURIComponent(document.getElementById('password').value.trim());
   const mensaje = document.getElementById('mensaje');
 
-const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
-
+  const url = `/api/login?email=${email}&contrasena=${contrasena}`;
 
   try {
     const response = await fetch(url);
-    const text = await response.text();
-
-    let result;
-    try {
-      result = JSON.parse(text);
-    } catch {
-      // No es JSON válido, mostramos el texto recibido (puede ser HTML con error)
-      mensaje.textContent = "Error: respuesta inesperada del servidor";
-      mensaje.style.color = "red";
-      console.error("Respuesta no JSON:", text);
-      return;
-    }
+    const result = await response.json();
 
     if (result.success) {
-
-    sessionStorage.setItem("distribuidor", data.distribuidor);
-    sessionStorage.setItem("usuario", data.usuario);
-    sessionStorage.setItem("email", data.email);
+      sessionStorage.setItem("distribuidor", result.distribuidor);
+      sessionStorage.setItem("usuario", result.usuario);
+      sessionStorage.setItem("email", result.email);
 
       mensaje.textContent = `Bienvenido, ${result.distribuidor}!`;
-
       mensaje.style.color = "lightgreen";
 
       setTimeout(() => {
@@ -77,3 +63,4 @@ const url = `/api/login?email=${encodeURIComponent(email)}&contrasena=${encodeUR
     console.error("Error:", error);
   }
 });
+
