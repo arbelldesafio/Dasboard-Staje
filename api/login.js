@@ -6,7 +6,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'Faltan credenciales' });
     }
 
-    const url = `https://script.google.com/macros/s/AKfycbyl8BuWeZZWKQ0SMyv8Wt6TS2rkQEwYoic4y2LnGI7owdbWOazSnWKuw5k1Fn6NqY_p/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+    const url = `https://script.google.com/macros/s/AKfycbw7UcNdc0_jNQ0QL7gfsnAY6h4JzFEPAcIVReNLxeL33aM00qdoaeYIqVdtEDwMDlef/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
 
  const response = await fetch(url);
     const text = await response.text();
