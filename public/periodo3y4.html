@@ -94,7 +94,7 @@
     fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
       .then(res => res.json())
       .then(data => {
-        if (!data.success && !data.rows) {
+      if (!data.success || !data.rows) {
           throw new Error("Sin datos");
         }
 
