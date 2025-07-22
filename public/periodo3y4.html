@@ -83,7 +83,7 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const distribuidor = sessionStorage.getItem("distribuidor");
+      const distribuidor = localStorage.getItem("distribuidor");
       document.getElementById("bienvenida").textContent = `Bienvenido, ${distribuidor}`;
       if (!distribuidor) {
         alert("Sesión caducada. Volvé a iniciar sesión.");
