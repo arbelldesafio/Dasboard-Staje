@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 //utilizacion de ambos links para diferentes categorias
 
   const urlsPorCategoria = {
-    "3y4": "hhttps://script.google.com/macros/s/AKfycbzVVCnYII0DRZPj8nAkYvGS0Vmn03ZKhl-dW6d3qsd0hs61Yil4pRctGRPc-SfOPQDc/exec",
+    "3y4": "https://script.google.com/macros/s/AKfycbzVVCnYII0DRZPj8nAkYvGS0Vmn03ZKhl-dW6d3qsd0hs61Yil4pRctGRPc-SfOPQDc/exec",
     "4y5": "https://script.google.com/macros/s/AKfycbzMiG6Cqzk32xW_FlXzAOWyZPlZgNQr0Mkb7wJ_J12eq-QJjJYNfLnTogGtXr3On-dqaQ/exec" 
   };
 
