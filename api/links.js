@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   }
 
   const urlsPorCategoria = {
-    "3y4": "https://script.google.com/macros/s/AKfycbzVVCnYII0DRZPj8nAkYvGS0Vmn03ZKhl-dW6d3qsd0hs61Yil4pRctGRPc-SfOPQDc/exec",
-    "4y5": "https://script.google.com/macros/s/AKfycbzMiG6Cqzk32xW_FlXzAOWyZPlZgNQr0Mkb7wJ_J12eq-QJjJYNfLnTogGtXr3On-dqaQ/exec"
+    "3y4": "https://script.google.com/macros/s/AKfycbz6KeHTitTOd3sACu5AWJSZ8ZN0Tn2urUhk1bFgEwepqxzQ4RwGMbd8UIid2cn1FUqD/exec",
+    "4y5": "https://script.google.com/macros/s/AKfycbxj1lxyzfhFA38qDsstaq0XpulNp301D4BQhBZyGdrDXos3hKToSBKRZMpZsSuGXKfNmg/exec"
   };
 
   const keyCategoria = categoria.toLowerCase().trim();
