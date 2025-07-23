@@ -2,26 +2,15 @@
   "rewrites": [
     {
       "source": "/3y4",
-      "destination": "/periodo3y4.html?categoria=3y4"
+      "destination": "/3y4.html?categoria=3y4"
     },
     {
       "source": "/4y5",
-      "destination": "/periodo4y5.html?categoria=4y5"
+      "destination": "/4y5.html?categoria=4y5"
     },
     {
       "source": "/",
       "destination": "/index.html"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/links",
-      "dest": "/api/links.js",
-      "methods": ["GET"]
-    },
-    {
-      "src": "/.*",
-      "dest": "404.html"
     }
   ]
 }
