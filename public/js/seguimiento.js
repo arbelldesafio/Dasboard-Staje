@@ -1,115 +1,62 @@
 document.addEventListener("DOMContentLoaded", () => {
   const distribuidor = localStorage.getItem("distribuidor");
-  const categoria = localStorage.getItem("categoria") || "3y4";
+  const categoria = new URLSearchParams(window.location.search).get("categoria") || "3y4";
 
   if (!distribuidor) {
-    alert("Sesión caducada. Volvé a iniciar sesión.");
-    window.location.href = "./index.html";
+    alert("Por favor inicie sesión nuevamente");
+    window.location.href = "/index.html";
     return;
   }
 
-  // Actualizar título
+  // Mostrar categoría en el título
   document.title = `SEGUIMIENTO - PERIODO ${categoria.toUpperCase()}`;
 
-  // Usar URL relativa si el frontend y backend están en el mismo dominio
-  fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`)
-    .then(async res => {
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Error al obtener datos");
+  // Función mejorada para manejar fetch
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`);
+      
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
-      return res.json();
-    })
-    .then(data => {
-      if (!data.success) throw new Error(data.message || "Error en los datos");
 
-      // Mostrar bienvenida
-      document.getElementById('bienvenida').textContent = 
-        `BIENVENIDO/A, DISTRIBUIDOR: ${data.distribuidor}`;
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.message || "Error en los datos recibidos");
+      }
 
-      // Función para asignar links con validación
-      const assignLink = (elementId, url) => {
-        const element = document.getElementById(elementId);
-        if (!element) return;
+      // Actualizar UI
+      document.getElementById('bienvenida').textContent = `BIENVENIDO/A, DISTRIBUIDOR: ${data.distribuidor}`;
 
-        if (url) {
-          element.href = url;
-          element.classList.remove("disabled-link");
-        } else {
-          element.href = "#";
-          element.classList.add("disabled-link");
-          element.onclick = (e) => {
-            e.preventDefault();
-            alert("Este link no está disponible actualmente");
-          };
+      // Función auxiliar para asignar links
+      const assignLink = (id, url) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.href = url || "#";
+          if (!url) {
+            element.classList.add("disabled-link");
+            element.onclick = (e) => {
+              e.preventDefault();
+              alert("Este enlace no está disponible actualmente");
+            };
+          }
         }
       };
 
-      // Asignar links
-      assignLink('links-nuevas1', data.links.nuevas1);
-      assignLink('links-nuevas2', data.links.nuevas2);
-      assignLink('links-incorpo1', data.links.incorpo1);
-      assignLink('links-incorpo2', data.links.incorpo2);
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      document.getElementById('bienvenida').textContent = `ERROR: ${error.message}`;
-    });
-});document.addEventListener("DOMContentLoaded", () => {
-  const distribuidor = localStorage.getItem("distribuidor");
-  const categoria = localStorage.getItem("categoria") || "3y4";
+      // Asignar todos los links
+      assignLink('links-nuevas1', data.links?.nuevas1);
+      assignLink('links-nuevas2', data.links?.nuevas2);
+      assignLink('links-incorpo1', data.links?.incorpo1);
+      assignLink('links-incorpo2', data.links?.incorpo2);
 
-  if (!distribuidor) {
-    alert("Sesión caducada. Volvé a iniciar sesión.");
-    window.location.href = "./index.html";
-    return;
-  }
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+      document.getElementById('bienvenida').textContent = `Error: ${error.message}`;
+      alert(`Error: ${error.message}`);
+    }
+  };
 
-  // Actualizar título
-  document.title = `SEGUIMIENTO - PERIODO ${categoria.toUpperCase()}`;
-
-  // Usar URL relativa si el frontend y backend están en el mismo dominio
-  fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`)
-    .then(async res => {
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Error al obtener datos");
-      }
-      return res.json();
-    })
-    .then(data => {
-      if (!data.success) throw new Error(data.message || "Error en los datos");
-
-      // Mostrar bienvenida
-      document.getElementById('bienvenida').textContent = 
-        `BIENVENIDO/A, DISTRIBUIDOR: ${data.distribuidor}`;
-
-      // Función para asignar links con validación
-      const assignLink = (elementId, url) => {
-        const element = document.getElementById(elementId);
-        if (!element) return;
-
-        if (url) {
-          element.href = url;
-          element.classList.remove("disabled-link");
-        } else {
-          element.href = "#";
-          element.classList.add("disabled-link");
-          element.onclick = (e) => {
-            e.preventDefault();
-            alert("Este link no está disponible actualmente");
-          };
-        }
-      };
-
-      // Asignar links
-      assignLink('links-nuevas1', data.links.nuevas1);
-      assignLink('links-nuevas2', data.links.nuevas2);
-      assignLink('links-incorpo1', data.links.incorpo1);
-      assignLink('links-incorpo2', data.links.incorpo2);
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      document.getElementById('bienvenida').textContent = `ERROR: ${error.message}`;
-    });
+  // Ejecutar la función
+  fetchData();
 });
