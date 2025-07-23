@@ -5,9 +5,9 @@ export default async function handler(req, res) {
     if (!email || !contrasena) {
       return res.status(400).json({ success: false, message: 'Faltan credenciales' });
     }
-
-    const url = `https://script.google.com/macros/s/AKfycbyfxV8JYMaMZOjNo7OsCDVl3qU5PF9qUGTUZky5JFBXCnnn-97LCRn5RIqtD4Na4vo1/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
-
+    
+  const url = `https://script.google.com/macros/s/AKfycbzTmw0t0zUT5bUtPI4Qrp2aUW3BdyQcV1xCe1sFDxeCbvT9F-q_wC7pByQ2fWofvL9Y/exec?email=${encodeURIComponent(email)}&contrasena=${encodeURIComponent(contrasena)}`;
+    
  const response = await fetch(url);
     const text = await response.text();
     
