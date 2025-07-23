@@ -35,7 +35,10 @@ export default async function handler(req, res) {
       const data = JSON.parse(text);
       console.log("✅ JSON parseado correctamente:", data);
 
-      const filteredRows = data.rows.filter(row => row[3] === distribuidor);
+const filteredRows = data.rows.filter(row =>
+  row[3].trim().toLowerCase() === distribuidor.trim().toLowerCase() &&
+  row[0].trim().toLowerCase() === categoria.trim().toLowerCase()
+);
       console.log(`🎯 Filtradas ${filteredRows.length} filas para distribuidor "${distribuidor}"`);
 
       return res.status(200).json({
