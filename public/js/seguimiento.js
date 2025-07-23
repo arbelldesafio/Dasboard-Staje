@@ -1,6 +1,3 @@
-
-//cambiar boton
-document.getElementById('bienvenida').textContent = `BIENVENIDO/A, DISTRIBUIDOR: ${row[3]}`;
 document.addEventListener("DOMContentLoaded", () => {
   const distribuidor = localStorage.getItem("distribuidor");
   const params = new URLSearchParams(window.location.search);
@@ -17,22 +14,28 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       console.log("🔍 Respuesta del backend:", data);
 
-      if (!data.success || !data.rows || data.rows.length < 4) {
-        alert("No se encontraron suficientes enlaces para mostrar.");
+      if (!data.success || !data.rows || data.rows.length === 0) {
+        alert("No se encontraron enlaces para mostrar.");
         return;
       }
 
-      document.getElementById('links-nuevas1').href = data.rows[0][5];
-      document.getElementById('links-nuevas2').href = data.rows[1][6];
-      document.getElementById('links-incorpo1').href = data.rows[2][7];
-      document.getElementById('links-incorpo2').href = data.rows[3][9];
+      // Usamos la primera fila (la más relevante)
+      const row = data.rows[0];
+
+      // Bienvenida
+      document.getElementById('bienvenida').textContent = `BIENVENIDO/A, DISTRIBUIDOR: ${row[3]}`;
+
+      // Asignar los links a los botones (con fallback "#")
+      document.getElementById('links-nuevas1').href = row[5] || "#";
+      document.getElementById('links-nuevas2').href = row[6] || "#";
+      document.getElementById('links-incorpo1').href = row[7] || "#";
+      document.getElementById('links-incorpo2').href = row[9] || "#";
     })
     .catch(error => {
       console.error("❌ Error al obtener links:", error);
       alert("Error al cargar los enlaces filtrados.");
     });
 });
-
 
 
 
