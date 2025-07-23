@@ -13,11 +13,4 @@
       "destination": "/index.html"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/links",
-      "dest": "/api/links.js",
-      "methods": ["GET"]
-    }
-  ]
 }
