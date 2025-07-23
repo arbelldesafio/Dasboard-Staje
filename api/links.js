@@ -25,6 +25,16 @@ if (filasPeriodo.length === 0) {
   });
 }
 
+  console.log("URL consultada:", url);
+console.log("Período solicitado:", categoria);
+console.log("Datos recibidos:", {
+  headers: data.headers,
+  rows: data.rows.map(r => ({
+    periodo: r[periodoIndex],
+    distribuidor: r[distribuidorIndex]
+  }))
+});
+
   
   try {
     const url = `${urlsPorCategoria[categoria]}?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`;
