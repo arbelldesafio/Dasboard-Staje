@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   const urlsPorCategoria = {
-    "3y4": "https://script.google.com/macros/s/AKfycbw6QKlOH8f_O8bNJ1zTWFXbG1zeBnHSRWCWRV8nD1wB7tWqm7TDvRUhUGwTLV1n6_aY/exec",
+    "3y4": "https://script.google.com/macros/s/AKfycbxkVeUvL8PHDB2cutO91hY81o9AUdNE3eZ3gU-3mck836l1j6UDKKoKWhIc0xfbYbmy/exec",
     "4y5": "https://script.google.com/macros/s/AKfycbxj1lxyzfhFA38qDsstaq0XpulNp301D4BQhBZyGdrDXos3hKToSBKRZMpZsSuGXKfNmg/exec"
   };
 
