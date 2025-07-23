@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const distribuidor = localStorage.getItem("distribuidor");
   const params = new URLSearchParams(window.location.search);
-const categoria = params.get("categoria");
+const categoria = params.get("categoria") || localStorage.getItem("categoria") || "3y4";
+
 
 console.log("Distribuidor:", distribuidor);
 console.log("Categoría:", categoria);
