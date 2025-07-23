@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const distribuidor = localStorage.getItem("distribuidor");
   const params = new URLSearchParams(window.location.search);
   const categoria = params.get("categoria");
-
+console.log("Distribuidor:", distribuidor);
+console.log("Categoría:", categoria);
   if (!distribuidor || !categoria) {
     alert("Sesión caducada o error de ruta. Volvé a iniciar sesión.");
     window.location.href = "./index.html";
