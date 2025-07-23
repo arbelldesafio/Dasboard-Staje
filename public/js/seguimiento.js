@@ -1,13 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const distribuidor = localStorage.getItem("distribuidor");
+  const params = new URLSearchParams(window.location.search);
+  const categoria = params.get("categoria");
 
-  if (!distribuidor) {
-    alert("Sesión caducada. Volvé a iniciar sesión.");
+  if (!distribuidor || !categoria) {
+    alert("Sesión caducada o error de ruta. Volvé a iniciar sesión.");
     window.location.href = "./index.html";
     return;
   }
 
-  fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}`)
+  fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`)
     .then(res => res.json())
     .then(data => {
       console.log("🔍 Respuesta del backend:", data);
@@ -17,12 +19,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Usamos la primera fila (la más relevante)
       const row = data.rows[0];
 
-      // Mostrar bienvenida
+      // Bienvenida
       document.getElementById('bienvenida').textContent = `BIENVENIDO/A, DISTRIBUIDOR: ${row[3]}`;
 
-      // Asignar enlaces
+      // Asignar los links a los botones (con fallback "#")
       document.getElementById('links-nuevas1').href = row[5] || "#";
       document.getElementById('links-nuevas2').href = row[6] || "#";
       document.getElementById('links-incorpo1').href = row[7] || "#";
