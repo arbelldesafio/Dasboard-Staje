@@ -25,10 +25,10 @@ export default async function handler(req, res) {
 
     // Encontrar índices de columnas
     const distribuidorIndex = headers.indexOf("DISTRIBUIDOR");
-    const nuevas1Index = headers.indexOf("NUEVA INCO A CARGO");
-    const nuevas2Index = headers.indexOf("NUEVA INCO DE EQUIPO DE LIDER INTEGRA");
-    const incorpo1Index = headers.indexOf("INCO A CARGO");
-    const incorpo2Index = headers.indexOf("INCO DE EQUIPO DE LÍDER INTEGRA");
+const nuevas1Index = headers.indexOf("NUEVA INCO A CARGO"); // Correcto
+const nuevas2Index = headers.indexOf("NUEVA INCO DE EQUIPO DE LIDER INTEGRA"); // Correcto
+const incorpo1Index = headers.indexOf("INCO A CARGO"); // Correcto
+const incorpo2Index = headers.indexOf("INCO DE EQUIPO DE LÍDER INTEGRA");
 
     // Filtrar filas válidas (ignorar celdas vacías o #N/A)
     const validRows = rows.filter(row => 
