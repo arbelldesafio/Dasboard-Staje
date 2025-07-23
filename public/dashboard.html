@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento de Desafíos</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #4096ec;
+      margin: 0;
+      padding: 0;
+    }
+
+    .portada {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    .botones {
+      margin-bottom: 40px;
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .boton {
+      padding: 15px 30px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 18;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .boton:hover {
+      background-color: #0056b3;
+    }
+
+    .imagen-portada {
+      width: 90%;
+      max-width: 550px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="portada">
+
+    <h1 id="bienvenida"></h1>
+    
+    <div class="botones">
+      <a class="boton" href="periodo3y4.html">PERIODO 3 Y 4</a>
+      <a class="boton" href="periodo4y5.html">PERIODO 4 Y 5</a>
+    </div>
+    <img src="portada.jpg" alt="Seguimiento de Desafíos" class="imagen-portada" />
+    <button onclick="logout()" style="margin: 20px; padding: 10px 20px; font-size: 16px;">Cerrar sesión</button>
+  </div>
+
+
+  <script>
+    const distribuidor = localStorage.getItem("distribuidor");
+    const usuario = localStorage.getItem("usuario");
+
+    if (!distribuidor) {
+      // Si no hay sesión, redirigir al login
+      window.location.href = "index.html"; // o donde tengas el login
+    } else {
+      document.getElementById("bienvenida").textContent = `Bienvenido/a ${distribuidor}`;
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
