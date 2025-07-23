@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     }
 
     // Tomamos el primer resultado (debería ser el único si los nombres son únicos)
-    const resultado = data.data[0];
+    const resultado = data.data;
     
     return res.status(200).json({
       success: true,
