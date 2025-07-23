@@ -1,16 +1,36 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/3y4",
-      "destination": "/3y4.html?categoria=3y4"
+      "src": "api/links.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/4y5",
-      "destination": "/4y5.html?categoria=4y5"
+      "src": "public/**/*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/3y4",
+      "dest": "/public/periodo3y4.html?categoria=3y4"
     },
     {
-      "source": "/",
-      "destination": "/index.html"
+      "src": "/4y5",
+      "dest": "/public/periodo4y5.html?categoria=4y5"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/api/links",
+      "dest": "/api/links",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/404.html"
     }
   ]
 }
