@@ -10,6 +10,22 @@ export default async function handler(req, res) {
     "4y5": "https://script.google.com/macros/s/AKfycbwYcLTXEhg8m8cAz4TY47Lb0gHurJKhBPPy92bX7TSW9G3mT_gFZHaOEk7pEHuyLVs2bw/exec"
   };
 
+  const periodoIndex = headers.indexOf("PERIODO");
+
+  // Filtra SOLO las filas del período solicitado
+const filasPeriodo = data.rows.filter(row => {
+  const periodoRow = row[periodoIndex]?.toString().toLowerCase();
+  return periodoRow && periodoRow.includes(categoria.toLowerCase());
+});
+
+if (filasPeriodo.length === 0) {
+  return res.status(404).json({
+    success: false,
+    message: `No hay datos para ${distribuidor} en período ${categoria}`
+  });
+}
+
+  
   try {
     const url = `${urlsPorCategoria[categoria]}?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`;
     const response = await fetch(url);
