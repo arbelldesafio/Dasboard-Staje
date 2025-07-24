@@ -50,7 +50,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     asignarEnlaceSeguro("nuevas2", data.links.nuevas2);
     asignarEnlaceSeguro("incorpo1", data.links.incorpo1);
     asignarEnlaceSeguro("incorpo2", data.links.incorpo2);
-log("Enlaces ");
+  
+  console.log("Enlaces ");
 
   } catch (error) {
     console.error("Error:", error);
