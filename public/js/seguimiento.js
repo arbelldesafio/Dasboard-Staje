@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    // Mostrar estado de carga
+    const bienvenidaElement = document.getElementById("bienvenida");
+    bienvenidaElement.textContent = "Cargando datos del distribuidor...";
+
     // 1. Determinar la categoría desde el nombre de la página
-    const urlActual = window.location.pathname; // Ej: "/periodo4y5.html"
+    const urlActual = window.location.pathname;
     console.log("URL actual:", urlActual);
     
     // Extraer la categoría del nombre del archivo
@@ -12,16 +16,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 2. Validación de categoría
     if (!categoria) {
-      throw new Error("No se pudo determinar la categoría desde la URL.\nEl archivo debe llamarse 'periodo3y4.html' o 'periodo4y5.html'");
+      throw new Error("No se pudo determinar la categoría desde la URL");
     }
 
-    // 3. Obtener distribuidor
-    const distribuidor = localStorage.getItem("distribuidor");
-    if (!distribuidor) {
-      throw new Error("No se encontró el distribuidor en localStorage");
+    // 3. Obtener distribuidor con reintentos
+    let distribuidor = null;
+    let intentos = 3;
+    
+    while (intentos > 0 && !distribuidor) {
+      distribuidor = localStorage.getItem("distribuidor");
+      if (!distribuidor) {
+        console.warn(`Distribuidor no encontrado (intentos restantes: ${intentos-1})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        intentos--;
+      }
     }
+    
+    if (!distribuidor) {
+      throw new Error("No se encontró el distribuidor en localStorage después de 3 intentos");
+    }
+    
     const distribuidorNormalizado = distribuidor.toUpperCase();
     console.log("Distribuidor:", distribuidorNormalizado);
+    bienvenidaElement.textContent = `Distribuidor: ${distribuidorNormalizado}`;
 
     // 4. Configuración de endpoints
     const endpoints = {
@@ -40,6 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("URL completa de API:", apiUrl);
     
     const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+    
     const data = await response.json();
     
     if (!data.success) {
@@ -47,21 +68,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     console.log("Datos recibidos de la API:", data);
 
-    // 6. Asignar enlaces a los elementos HTML
+    // 6. Asignar enlaces a los elementos HTML (con los IDs correctos)
     const asignarEnlace = (id, url) => {
       const elemento = document.getElementById(id);
       if (!elemento) {
-        console.warn(`Elemento con ID ${id} no encontrado`);
-        return;
+        throw new Error(`Elemento con ID ${id} no encontrado en el HTML`);
       }
       elemento.href = url;
       console.log(`Asignado ${id}: ${url}`);
     };
 
-    asignarEnlace("nuevas1", data.links.nuevas1);
-    asignarEnlace("nuevas2", data.links.nuevas2);
-    asignarEnlace("incorpo1", data.links.incorpo1);
-    asignarEnlace("incorpo2", data.links.incorpo2);
+    // Usando los IDs que tienes en tu HTML actual
+    asignarEnlace("links-nuevas1", data.links.nuevas1);
+    asignarEnlace("links-nuevas2", data.links.nuevas2);
+    asignarEnlace("links-incorpo1", data.links.incorpo1);
+    asignarEnlace("links-incorpo2", data.links.incorpo2);
 
     console.log("Proceso completado exitosamente");
 
@@ -72,7 +93,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       url: window.location.href
     });
     
-    alert(`Error: ${error.message}`);
-    window.location.href = "/dashboard.html";
+    const bienvenidaElement = document.getElementById("bienvenida");
+    bienvenidaElement.textContent = `Error: ${error.message}`;
+    bienvenidaElement.style.color = "red";
+    
+    // Opcional: Mostrar botón de reintento
+    const botonReintentar = document.createElement("button");
+    botonReintentar.textContent = "Reintentar";
+    botonReintentar.className = "boton-link";
+    botonReintentar.onclick = () => window.location.reload();
+    document.querySelector(".seccion").appendChild(botonReintentar);
   }
 });
