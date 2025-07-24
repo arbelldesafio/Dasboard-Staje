@@ -249,3 +249,24 @@ button:hover {
   color: #ffcccc;
   margin-top: 10px;
 }
+a[aria-disabled="true"] {
+    position: relative;
+    filter: grayscale(50%);
+}
+
+a[aria-disabled="true"]:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Efecto de "no permitido" más pronunciado */
+a[aria-disabled="true"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
