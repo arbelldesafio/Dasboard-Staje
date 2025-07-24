@@ -88,18 +88,21 @@ function asignarEnlaces(links) {
       return;
     }
     
-    if (!url) {
-      elemento.style.opacity = "0.6";
-      elemento.style.cursor = "not-allowed";
-      elemento.onclick = (e) => e.preventDefault();
-      elemento.title = "Enlace no disponible";
-      return;
-    }
-    
-    elemento.href = url;
-    elemento.style.opacity = "1";
-    elemento.style.cursor = "pointer";
-  };
+    const asignarEnlace = (id, url) => {
+      const elemento = document.getElementById(id);
+      if (!elemento) return;
+      
+      if (!url) {
+        elemento.style.opacity = "0.6";
+        elemento.style.cursor = "not-allowed";
+        elemento.onclick = (e) => e.preventDefault();
+        elemento.title = "Enlace no disponible";
+      } else {
+        elemento.href = url;
+        elemento.style.opacity = "1";
+        elemento.style.cursor = "pointer";
+      }
+    };
 
   asignarEnlace("nuevas1", links.nuevas1);
   asignarEnlace("nuevas2", links.nuevas2);
