@@ -1,68 +1,91 @@
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // 1. Obtener y validar categoría
+    // Mostrar estado de carga
+    const bienvenidaElement = document.getElementById("bienvenida");
+    bienvenidaElement.textContent = "Cargando datos del distribuidor...";
+
+    // 1. Obtener categoría de la URL
     const urlActual = window.location.pathname;
     const categoria = urlActual.includes('4y5') ? '4y5' : 
                      urlActual.includes('3y4') ? '3y4' : null;
     
-    if (!categoria) throw new Error("URL debe contener '3y4' o '4y5'");
+    if (!categoria) throw new Error("No se pudo determinar la categoría desde la URL");
 
-    // 2. Obtener y validar distribuidor
+    // 2. Obtener distribuidor
     const distribuidor = localStorage.getItem("distribuidor");
-    if (!distribuidor) throw new Error("Distribuidor no encontrado");
+    if (!distribuidor || distribuidor.trim() === "") {
+      throw new Error("No se encontró el distribuidor en localStorage");
+    }
     const distribuidorNormalizado = distribuidor.toUpperCase();
-    document.getElementById("bienvenida").textContent = `Distribuidor: ${distribuidorNormalizado}`;
+    bienvenidaElement.textContent = `Distribuidor: ${distribuidorNormalizado}`;
 
-    // 3. Configurar endpoint
+    // 3. Configurar endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
       "4y5": "https://script.google.com/macros/s/AKfycbxqJuHmvFxoX6FOeIZMmLo1taBBVrBJtZZ_H9S265HXLsy00dD38bJivkJMyKcw7VyzEA/exec"
     };
-    const endpoint = endpoints[categoria];
-    if (!endpoint) throw new Error(`Endpoint no configurado para ${categoria}`);
 
-    // 4. Obtener datos de la API con validación
+    const endpoint = endpoints[categoria];
+    if (!endpoint) throw new Error("No hay endpoint configurado para esta categoría");
+
+    // 4. Obtener datos de la API
     const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
+    console.log("Consultando API:", apiUrl);
+    
     const response = await fetch(apiUrl);
-    if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
     
     const data = await response.json();
-    if (!data.success) throw new Error(data.error || "Error en API");
+    console.log("Respuesta de la API:", data);
     
-    // 5. Validar estructura de datos recibida
+    if (!data.success) throw new Error(data.error || "Error en la respuesta de la API");
+
+    // 5. Validar estructura de datos
     if (!data.links || typeof data.links !== 'object') {
-      throw new Error("Formato de datos incorrecto: falta objeto 'links'");
+      throw new Error("La API no devolvió la estructura esperada de enlaces");
     }
 
     // 6. Asignar enlaces con validación
-    const asignarEnlaceSeguro = (id, url) => {
-      if (!url) {
-        console.warn(`URL no definida para ${id}`);
+    const asignarEnlace = (id, url) => {
+      const elemento = document.getElementById(id);
+      if (!elemento) {
+        console.warn(`Elemento ${id} no encontrado en el DOM`);
         return;
       }
-      const elemento = document.getElementById(id);
-      if (elemento) elemento.href = url;
-      else console.warn(`Elemento ${id} no encontrado`);
+      
+      if (!url || typeof url !== 'string' || url.trim() === '') {
+        console.warn(`URL no válida para ${id}`);
+        elemento.style.display = 'none'; // Ocultar si no hay URL válida
+        return;
+      }
+      
+      elemento.href = url;
+      console.log(`Enlace asignado a ${id}: ${url}`);
     };
 
-    // Usando los nombres exactos de las propiedades que devuelve la API
-    asignarEnlaceSeguro("nuevas1", data.links.nuevas1);
-    asignarEnlaceSeguro("nuevas2", data.links.nuevas2);
-    asignarEnlaceSeguro("incorpo1", data.links.incorpo1);
-    asignarEnlaceSeguro("incorpo2", data.links.incorpo2);
-  
-  console.log("Enlaces ");
+    // Asignar enlaces (ajustado a los IDs de tu HTML)
+    asignarEnlace("nuevas1", data.links.nuevas1);
+    asignarEnlace("nuevas2", data.links.nuevas2);
+    asignarEnlace("incorpo1", data.links.incorpo1);
+    asignarEnlace("incorpo2", data.links.incorpo2);
+
+    console.log("Proceso completado exitosamente");
 
   } catch (error) {
-    console.error("Error:", error);
-    document.getElementById("bienvenida").textContent = `Error: ${error.message}`;
-    document.getElementById("bienvenida").style.color = "red";
+    console.error("Error en la aplicación:", error);
+    
+    // Mostrar error en la interfaz
+    const bienvenidaElement = document.getElementById("bienvenida");
+    if (bienvenidaElement) {
+      bienvenidaElement.textContent = `Error: ${error.message}`;
+      bienvenidaElement.style.color = "red";
+    }
     
     // Crear botón de reintento
-    const boton = document.createElement("button");
-    boton.textContent = "Reintentar";
-    boton.className = "boton-link";
-    boton.onclick = () => window.location.reload();
-    document.querySelector(".seccion").appendChild(boton);
+    const botonReintentar = document.createElement("button");
+    botonReintentar.textContent = "Reintentar";
+    botonReintentar.className = "boton-link";
+    botonReintentar.onclick = () => window.location.reload();
+    document.querySelector(".seccion")?.appendChild(botonReintentar);
   }
 });
