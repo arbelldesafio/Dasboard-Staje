@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Configurar endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwGETGGFQxPHjGNCIHukemiIEBhYXMDWHAve-0IF78liDeyc-uKPSsltAfFKVru2iTx/exec",
-      "4y5": "https://script.google.com/macros/s/AKfycbzlz6pN2YmLOm2Id9k7PnrBXnevr-Iv0AxNLRFdEcDwcr8hpm4cZNzE3BsIX7PpWxUbJA/exec"
+      "4y5": "https://script.google.com/macros/s/AKfycbw6tHw8FGzz8rAE8osPEyCHtYmbICdpkvN2mTnQNSDi8LLLxKgfjuuQcRLmoiBnTPQM3w/exec"
     };
 
     const endpoint = endpoints[categoria];
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     const data = await response.json();
     console.log("Datos recibidos:", data);
-    
+
     if (!data.success) throw new Error(data.error || "Error en la API");
 
     // 5. Asignar enlaces (estructura consistente para ambos períodos)
