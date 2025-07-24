@@ -79,10 +79,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     // Usando los IDs que tienes en tu HTML actual
-    asignarEnlace("links-nuevas1", data.links.nuevas1);
-    asignarEnlace("links-nuevas2", data.links.nuevas2);
-    asignarEnlace("links-incorpo1", data.links.incorpo1);
-    asignarEnlace("links-incorpo2", data.links.incorpo2);
+    asignarEnlace("nuevas1", data.nuevas1);
+    asignarEnlace("nuevas2", data.nuevas2);
+    asignarEnlace("incorpo1".links.incorpo1);
+    asignarEnlace("incorpo2".links.incorpo2);
 
     console.log("Proceso completado exitosamente");
 
