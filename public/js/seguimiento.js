@@ -2,11 +2,11 @@
     const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
     const categoria = new URLSearchParams(window.location.search).get("categoria")?.toUpperCase() || "3Y4";
 
-    if (!distribuidor) {
-      alert("No hay distribuidor logueado.");
-      return;
-    }
 
+    console.log("Distribuidor:", distribuidor);
+    console.log("Categoría recibida:", categoria);
+
+    
     // URLs de tus 2 GAS (cada uno vinculado a su Sheet respectivo)
     const urls  = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
@@ -14,6 +14,7 @@
     };
 
       const url = urls[categoria];
+        console.log("URL seleccionada:", url);
     if (!url) {
       alert("Categoría inválida.");
       return;
