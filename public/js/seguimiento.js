@@ -1,56 +1,73 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
-  const categoria = new URLSearchParams(window.location.search).get("categoria")?.toLowerCase().trim();
-
-  // Lista de categorías permitidas
-  const categoriasPermitidas = ["3y4", "4y5"];
-
-  if (!categoria || !categoriasPermitidas.includes(categoria)) {
-    alert(`Categoría inválida. Usá: ${categoriasPermitidas.join(" o ")}`);
-    window.location.href = `/dashboard.html`; // Redirige a una página segura
-    return;
-  }
-
-    console.log("Distribuidor:", distribuidor);
-    console.log("Categoría recibida:", categoria);
-
-    const hoja = obtenerNombreHoja(categoria);
-    if (!hoja) {
-      alert("Categoría inválida.");
+  try {
+    // Obtener y validar distribuidor
+    const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
+    if (!distribuidor) {
+      alert("Error: No se encontró el distribuidor en localStorage");
+      window.location.href = "/dashboard.html";
       return;
     }
 
-    const urls  = {
+    // Obtener y validar categoría
+    const categoria = new URLSearchParams(window.location.search).get("categoria")?.toLowerCase().trim();
+    const categoriasPermitidas = ["3y4", "4y5"];
+    
+    if (!categoria || !categoriasPermitidas.includes(categoria)) {
+      alert(`Categoría inválida. Use: ${categoriasPermitidas.join(" o ")}`);
+      window.location.href = "/dashboard.html";
+      return;
+    }
+
+    // Depuración
+    console.debug("Datos cargados:", {
+      url: window.location.href,
+      params: Object.fromEntries(new URLSearchParams(window.location.search)),
+      distribuidor,
+      categoria
+    });
+
+    // Configuración de URLs
+    const urls = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
       "4y5": "https://script.google.com/macros/s/AKfycbxqJuHmvFxoX6FOeIZMmLo1taBBVrBJtZZ_H9S265HXLsy00dD38bJivkJMyKcw7VyzEA/exec"
     };
 
-      const url = urls[categoria];
-    console.log("URL seleccionada:", url);
-
-    if (!url) {
-      alert("URL no definida para esta categoría.");
-      return;
+    const urlAPI = urls[categoria];
+    if (!urlAPI) {
+      throw new Error(`No hay URL configurada para la categoría ${categoria}`);
     }
 
-    try {
-      const res = await fetch(`${url}?distribuidor=${distribuidor}`);
-      const data = await res.json();
+    console.log("Conectando con API:", urlAPI);
 
-      if (!data.success) {
-        throw new Error(data.error || "Error desconocido");
+    // Obtener datos de la API
+    const response = await fetch(`${urlAPI}?distribuidor=${encodeURIComponent(distribuidor)}`);
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "La API no devolvió success=true");
+    }
+
+    // Asignar enlaces
+    const asignarEnlace = (id, url) => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.href = url;
+        console.log(`Enlace ${id} asignado:`, url);
+      } else {
+        console.warn(`Elemento #${id} no encontrado en el DOM`);
       }
+    };
 
-      console.log("Links recibidos:", data.links);
+    asignarEnlace("nuevas1", data.links.nuevas1);
+    asignarEnlace("nuevas2", data.links.nuevas2);
+    asignarEnlace("incorpo1", data.links.incorpo1);
+    asignarEnlace("incorpo2", data.links.incorpo2);
 
-      // Mostrar enlaces
-      document.getElementById("nuevas1").href = data.links.nuevas1;
-      document.getElementById("nuevas2").href = data.links.nuevas2;
-      document.getElementById("incorpo1").href = data.links.incorpo1;
-      document.getElementById("incorpo2").href = data.links.incorpo2;
+    console.log("Todos los enlaces fueron asignados correctamente");
 
-    } catch (err) {
-      console.error("Error al cargar los enlaces:", err.message);
-      alert("No se pudieron cargar los enlaces: " + err.message);
-    }
-  });
+  } catch (error) {
+    console.error("Error en la aplicación:", error);
+    alert(`Error: ${error.message}\n\nSerás redirigido al dashboard.`);
+    window.location.href = "/dashboard.html";
+  }
+});
