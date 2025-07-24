@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Configurar endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
-      "4y5": "https://script.google.com/macros/s/1_TYS6trUiuH5kQCCcbJ6miHGps9lP34CywMYnv8KFfiSqdswsITZ5GeC/exec"
+      "4y5": "https://script.google.com/macros/s/AKfycbwB_UrmPAnbFlg1r3b8jfa5GcSvWWqyKckKf7Hn1ORdtEtaA3gl6fUFkJ22GSwhtB9tOA/exec"
     };
 
     const endpoint = endpoints[categoria];
@@ -53,15 +53,92 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
       
-      if (!url || typeof url !== 'string' || url.trim() === '' || url === "#") {
-        console.warn(`URL no válida para ${id}`);
-        elemento.style.opacity = "0.5";
-        elemento.style.cursor = "not-allowed";
-        elemento.href = "#";
-        elemento.title = "Enlace no disponible";
-        if (textoDefault) elemento.textContent = textoDefault + " (no disponible)";
-        return;
-      }
+if (!url || typeof url !== 'string' || url.trim() === '' || url === "#") {
+    console.warn(`URL no válida para ${id}`);
+    
+    // 1. Bloquear completamente la acción del enlace
+    elemento.href = "javascript:void(0);";
+    elemento.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    };
+    
+    // 2. Estilos para distinguir visualmente
+    elemento.style.opacity = "0.7";
+    elemento.style.cursor = "not-allowed";
+    elemento.style.position = "relative";
+    
+    // 3. Efecto visual al hover
+    elemento.style.transition = "all 0.3s ease";
+    elemento.addEventListener('mouseover', () => {
+        elemento.style.transform = "none"; // Anima cualquier transformación previa
+    });
+    
+    // 4. Indicador visual (sin necesidad de FontAwesome)
+    const disabledIndicator = document.createElement("span");
+    disabledIndicator.style.position = "absolute";
+    disabledIndicator.style.right = "5px";
+    disabledIndicator.style.top = "5px";
+    disabledIndicator.style.width = "12px";
+    disabledIndicator.style.height = "12px";
+    disabledIndicator.style.borderRadius = "50%";
+    disabledIndicator.style.backgroundColor = "#ff5252";
+    disabledIndicator.style.border = "2px solid white";
+    elemento.appendChild(disabledIndicator);
+    
+    // 5. Tooltip nativo
+    elemento.title = "Este enlace no está disponible";
+    
+    // 6. Cambiar texto si se provee textoDefault
+    if (textoDefault) {
+        elemento.textContent = textoDefault;
+    }
+    
+    // 7. Atributos para accesibilidad
+    elemento.setAttribute("aria-disabled", "true");
+    elemento.setAttribute("tabindex", "-1"); // Evita que sea enfocable
+    
+    return;
+}
+    
+    // 2. Estilos para distinguir visualmente
+    elemento.style.opacity = "0.7";
+    elemento.style.cursor = "not-allowed";
+    elemento.style.position = "relative";
+    
+    // 3. Efecto visual al hover
+    elemento.style.transition = "all 0.3s ease";
+    elemento.addEventListener('mouseover', () => {
+        elemento.style.transform = "none"; // Anima cualquier transformación previa
+    });
+    
+    // 4. Indicador visual (sin necesidad de FontAwesome)
+    const disabledIndicator = document.createElement("span");
+    disabledIndicator.style.position = "absolute";
+    disabledIndicator.style.right = "5px";
+    disabledIndicator.style.top = "5px";
+    disabledIndicator.style.width = "12px";
+    disabledIndicator.style.height = "12px";
+    disabledIndicator.style.borderRadius = "50%";
+    disabledIndicator.style.backgroundColor = "#ff5252";
+    disabledIndicator.style.border = "2px solid white";
+    elemento.appendChild(disabledIndicator);
+    
+    // 5. Tooltip nativo
+    elemento.title = "Este enlace no está disponible";
+    
+    // 6. Cambiar texto si se provee textoDefault
+    if (textoDefault) {
+        elemento.textContent = textoDefault;
+    }
+    
+    // 7. Atributos para accesibilidad
+    elemento.setAttribute("aria-disabled", "true");
+    elemento.setAttribute("tabindex", "-1"); // Evita que sea enfocable
+    
+    return;
+}
       
       elemento.href = url;
       elemento.style.opacity = "1";
