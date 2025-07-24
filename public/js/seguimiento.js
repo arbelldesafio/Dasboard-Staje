@@ -1,3 +1,11 @@
+function debounce(func, timeout = 1000) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+button.addEventListener('click', debounce(() => {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Mostrar estado de carga
@@ -78,3 +86,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 });
+}));
