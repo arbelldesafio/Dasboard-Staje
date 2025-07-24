@@ -7,6 +7,17 @@ body {
   text-align: center;
 }
 
+.disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* Estilos base para los enlaces/buttons */
+#nuevas1, #nuevas2, #incorpo1, #incorpo2 {
+  transition: opacity 0.3s ease;
+}
+
 .portada {
   max-width: 600px;
   margin: auto;
