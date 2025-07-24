@@ -1,3 +1,4 @@
+// Función debounce para prevenir múltiples ejecuciones
 function debounce(func, timeout = 1000) {
   let timer;
   return (...args) => {
@@ -5,7 +6,7 @@ function debounce(func, timeout = 1000) {
     timer = setTimeout(() => { func.apply(this, args); }, timeout);
   };
 }
-button.addEventListener('click', debounce(() => {
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Mostrar estado de carga
@@ -34,16 +35,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const endpoint = endpoints[categoria];
     if (!endpoint) throw new Error("Endpoint no configurado");
 
-    // 4. Obtener datos de la API
-    const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
-    const response = await fetch(apiUrl);
-    
-    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-    
-    const data = await response.json();
-    console.log("Datos recibidos:", data);
+    // 4. Obtener datos de la API con debounce
+    const fetchData = debounce(async () => {
+      const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+      
+      const data = await response.json();
+      console.log("Datos recibidos:", data);
 
-    if (!data.success) throw new Error(data.error || "Error en la API");
+      if (!data.success) throw new Error(data.error || "Error en la API");
+      return data;
+    });
+
+    const data = await fetchData();
 
     // 5. Función para manejar elementos
     const manejarElemento = (elemento, url) => {
@@ -53,6 +59,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Si tiene URL, lo habilitamos
         if (elemento.tagName === 'A') {
           elemento.href = url;
+          // Aplicar debounce solo a los clics en enlaces
+          elemento.addEventListener('click', debounce((e) => {
+            if (!url) {
+              e.preventDefault();
+              return false;
+            }
+          }));
+        } else if (elemento.tagName === 'BUTTON') {
+          // Para botones
+          elemento.addEventListener('click', debounce(() => {
+            if (url) {
+              window.location.href = url;
+            }
+          }));
         }
         elemento.style.opacity = "1";
         elemento.style.cursor = "pointer";
@@ -62,8 +82,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         elemento.style.opacity = "0.6";
         elemento.style.cursor = "not-allowed";
         elemento.classList.add('disabled');
-        
-        // Comportamiento al hacer clic
         elemento.onclick = (e) => {
           e.preventDefault();
           return false;
@@ -86,4 +104,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 });
-}));
