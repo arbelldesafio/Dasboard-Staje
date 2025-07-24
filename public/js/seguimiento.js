@@ -80,7 +80,6 @@ function updateStatus(message, type) {
 }
 
 // Función para asignar enlaces
-function asignarEnlaces(links) {
   const asignarEnlace = (id, url) => {
     const elemento = document.getElementById(id);
     if (!elemento) {
