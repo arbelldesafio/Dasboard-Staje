@@ -102,43 +102,7 @@ if (!url || typeof url !== 'string' || url.trim() === '' || url === "#") {
     return;
 }
     
-    // 2. Estilos para distinguir visualmente
-    elemento.style.opacity = "0.7";
-    elemento.style.cursor = "not-allowed";
-    elemento.style.position = "relative";
     
-    // 3. Efecto visual al hover
-    elemento.style.transition = "all 0.3s ease";
-    elemento.addEventListener('mouseover', () => {
-        elemento.style.transform = "none"; // Anima cualquier transformación previa
-    });
-    
-    // 4. Indicador visual (sin necesidad de FontAwesome)
-    const disabledIndicator = document.createElement("span");
-    disabledIndicator.style.position = "absolute";
-    disabledIndicator.style.right = "5px";
-    disabledIndicator.style.top = "5px";
-    disabledIndicator.style.width = "12px";
-    disabledIndicator.style.height = "12px";
-    disabledIndicator.style.borderRadius = "50%";
-    disabledIndicator.style.backgroundColor = "#ff5252";
-    disabledIndicator.style.border = "2px solid white";
-    elemento.appendChild(disabledIndicator);
-    
-    // 5. Tooltip nativo
-    elemento.title = "Este enlace no está disponible";
-    
-    // 6. Cambiar texto si se provee textoDefault
-    if (textoDefault) {
-        elemento.textContent = textoDefault;
-    }
-    
-    // 7. Atributos para accesibilidad
-    elemento.setAttribute("aria-disabled", "true");
-    elemento.setAttribute("tabindex", "-1"); // Evita que sea enfocable
-    
-    return;
-}
       
       elemento.href = url;
       elemento.style.opacity = "1";
