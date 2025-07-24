@@ -1,62 +1,40 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const distribuidor = localStorage.getItem("distribuidor");
-  const categoria = new URLSearchParams(window.location.search).get("categoria") || "3y4";
+async function cargarDatosPeriodo(categoria) {
+  try {
+    const distribuidor = localStorage.getItem("distribuidor");
+    if (!distribuidor) throw new Error("No hay sesión activa");
 
-  if (!distribuidor) {
-    alert("Por favor inicie sesión nuevamente");
-    window.location.href = "/index.html";
-    return;
+    // URLs de tus 2 GAS (cada uno vinculado a su Sheet respectivo)
+    const URLs = {
+      "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
+      "4y5": "https://script.google.com/macros/s/AKfycbxqJuHmvFxoX6FOeIZMmLo1taBBVrBJtZZ_H9S265HXLsy00dD38bJivkJMyKcw7VyzEA/exec"
+    };
+
+    const response = await fetch(`${URLs[categoria]}?distribuidor=${encodeURIComponent(distribuidor)}`);
+    const data = await response.json();
+
+    if (!data.success) throw new Error(data.error || "Error en los datos");
+
+    // Actualizar UI
+    actualizarLinks(data.links);
+    
+  } catch (error) {
+    console.error("Error:", error);
+    alert(`Error al cargar ${categoria}: ${error.message}`);
   }
+}
 
-  // Mostrar categoría en el título
-  document.title = `SEGUIMIENTO - PERIODO ${categoria.toUpperCase()}`;
-
-  // Función mejorada para manejar fetch
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`/api/links?distribuidor=${encodeURIComponent(distribuidor)}&categoria=${encodeURIComponent(categoria)}`);
-      
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.message || "Error en los datos recibidos");
-      }
-
-      // Actualizar UI
-      document.getElementById('bienvenida').textContent = `BIENVENIDO/A, DISTRIBUIDOR: ${data.distribuidor}`;
-
-      // Función auxiliar para asignar links
-      const assignLink = (id, url) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.href = url || "#";
-          if (!url) {
-            element.classList.add("disabled-link");
-            element.onclick = (e) => {
-              e.preventDefault();
-              alert("Este enlace no está disponible actualmente");
-            };
-          }
-        }
-      };
-
-      // Asignar todos los links
-      assignLink('links-nuevas1', data.links?.nuevas1);
-      assignLink('links-nuevas2', data.links?.nuevas2);
-      assignLink('links-incorpo1', data.links?.incorpo1);
-      assignLink('links-incorpo2', data.links?.incorpo2);
-
-    } catch (error) {
-      console.error("Error al obtener datos:", error);
-      document.getElementById('bienvenida').textContent = `Error: ${error.message}`;
-      alert(`Error: ${error.message}`);
+function actualizarLinks(links) {
+  const asignarLink = (id, url) => {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+      elemento.href = url || "#";
+      elemento.style.opacity = url ? 1 : 0.6;
+      elemento.onclick = !url ? (e) => e.preventDefault() : null;
     }
   };
 
-  // Ejecutar la función
-  fetchData();
-});
+  asignarLink("link-nuevas1", links.nuevas1);
+  asignarLink("link-nuevas2", links.nuevas2);
+  asignarLink("link-incorpo1", links.incorpo1);
+  asignarLink("link-incorpo2", links.incorpo2);
+}
