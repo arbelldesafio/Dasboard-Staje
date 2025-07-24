@@ -1,27 +1,21 @@
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // 1. Verificar parámetros de URL (con depuración detallada)
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log("Parámetros de URL encontrados:", Array.from(urlParams.entries()));
+    // 1. Determinar la categoría desde el nombre de la página
+    const urlActual = window.location.pathname; // Ej: "/periodo4y5.html"
+    console.log("URL actual:", urlActual);
     
-    // 2. Obtener categoría con validación estricta
-    const categoria = urlParams.get('categoria');
-    console.log("Categoría cruda obtenida:", categoria);
+    // Extraer la categoría del nombre del archivo
+    const categoria = urlActual.includes('4y5') ? '4y5' : 
+                     urlActual.includes('3y4') ? '3y4' : null;
     
+    console.log("Categoría detectada:", categoria);
+
+    // 2. Validación de categoría
     if (!categoria) {
-      throw new Error("El parámetro 'categoria' no está presente en la URL.\nEjemplo correcto: enlaces.html?categoria=3y4");
-    }
-    
-    const categoriaNormalizada = categoria.toLowerCase().trim();
-    console.log("Categoría normalizada:", categoriaNormalizada);
-    
-    // 3. Validar categorías permitidas
-    const categoriasPermitidas = ["3y4", "4y5"];
-    if (!categoriasPermitidas.includes(categoriaNormalizada)) {
-      throw new Error(`Categoría "${categoriaNormalizada}" no válida. Use: ${categoriasPermitidas.join(" o ")}`);
+      throw new Error("No se pudo determinar la categoría desde la URL.\nEl archivo debe llamarse 'periodo3y4.html' o 'periodo4y5.html'");
     }
 
-    // 4. Obtener distribuidor
+    // 3. Obtener distribuidor
     const distribuidor = localStorage.getItem("distribuidor");
     if (!distribuidor) {
       throw new Error("No se encontró el distribuidor en localStorage");
@@ -29,20 +23,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const distribuidorNormalizado = distribuidor.toUpperCase();
     console.log("Distribuidor:", distribuidorNormalizado);
 
-    // 5. Configuración de endpoints
+    // 4. Configuración de endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
       "4y5": "https://script.google.com/macros/s/AKfycbxqJuHmvFxoX6FOeIZMmLo1taBBVrBJtZZ_H9S265HXLsy00dD38bJivkJMyKcw7VyzEA/exec"
     };
 
-    // 6. Obtener y validar URL del endpoint
-    const endpoint = endpoints[categoriaNormalizada];
+    const endpoint = endpoints[categoria];
     if (!endpoint) {
-      throw new Error(`No hay endpoint configurado para la categoría ${categoriaNormalizada}`);
+      throw new Error(`No hay endpoint configurado para la categoría ${categoria}`);
     }
     console.log("Endpoint seleccionado:", endpoint);
 
-    // 7. Hacer la petición a la API
+    // 5. Hacer la petición a la API
     const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
     console.log("URL completa de API:", apiUrl);
     
@@ -54,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     console.log("Datos recibidos de la API:", data);
 
-    // 8. Asignar enlaces a los elementos HTML
+    // 6. Asignar enlaces a los elementos HTML
     const asignarEnlace = (id, url) => {
       const elemento = document.getElementById(id);
       if (!elemento) {
@@ -73,8 +66,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Proceso completado exitosamente");
 
   } catch (error) {
-    console.error("Error detectado:", error);
-    alert(error.message);
+    console.error("Error detectado:", {
+      mensaje: error.message,
+      stack: error.stack,
+      url: window.location.href
+    });
+    
+    alert(`Error: ${error.message}`);
     window.location.href = "/dashboard.html";
   }
 });
