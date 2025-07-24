@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Configurar endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
-      "4y5": "https://script.google.com/macros/s/AKfycbzBjskJ5C9LKJEMTyKUULpCMlwc0REdC7SqhjblEwsxYh2s-M2KlNJtCulRQ4OgNoaciQ/exec"
+      "4y5": "https://script.google.com/macros/s/1_TYS6trUiuH5kQCCcbJ6miHGps9lP34CywMYnv8KFfiSqdswsITZ5GeC/exec"
     };
 
     const endpoint = endpoints[categoria];
@@ -45,31 +45,48 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw new Error("La API no devolvió la estructura esperada de enlaces");
     }
 
-    // 6. Asignar enlaces con validación
-    const asignarEnlace = (id, url) => {
+    // 6. Asignar enlaces con validación mejorada
+    const asignarEnlace = (id, url, textoDefault) => {
       const elemento = document.getElementById(id);
       if (!elemento) {
-        console.warn(`Elemento ${id} no encontrado en el DOM`);
+        console.error(`Elemento ${id} no encontrado en el DOM`);
         return;
       }
       
-      if (!url || typeof url !== 'string' || url.trim() === '') {
+      if (!url || typeof url !== 'string' || url.trim() === '' || url === "#") {
         console.warn(`URL no válida para ${id}`);
-        elemento.style.display = 'none'; // Ocultar si no hay URL válida
+        elemento.style.opacity = "0.5";
+        elemento.style.cursor = "not-allowed";
+        elemento.href = "#";
+        elemento.title = "Enlace no disponible";
+        if (textoDefault) elemento.textContent = textoDefault + " (no disponible)";
         return;
       }
       
       elemento.href = url;
+      elemento.style.opacity = "1";
+      elemento.style.cursor = "pointer";
+      elemento.title = "";
       console.log(`Enlace asignado a ${id}: ${url}`);
     };
+    
+    asignarEnlace("nuevas1", data.links.nuevas1, "EQUIPO A MI CARGO");
+    asignarEnlace("nuevas2", data.links.nuevas2, "EQUIPO DE MIS LIDERES INTEGRA");
+    asignarEnlace("incorpo1", data.links.incorpo1, "EQUIPO A CARGO");
+    asignarEnlace("incorpo2", data.links.incorpo2, "EQUIPO DE MIS LIDERES INTEGRA");
 
-    // Asignar enlaces (ajustado a los IDs de tu HTML)
-    asignarEnlace("nuevas1", data.links.nuevas1);
-    asignarEnlace("nuevas2", data.links.nuevas2);
-    asignarEnlace("incorpo1", data.links.incorpo1);
-    asignarEnlace("incorpo2", data.links.incorpo2);
+    // Verificar si todos los enlaces están deshabilitados
+    const todosDeshabilitados = ["nuevas1", "nuevas2", "incorpo1", "incorpo2"].every(id => {
+      const el = document.getElementById(id);
+      return el && el.href === "#";
+    });
 
-    console.log("Proceso completado exitosamente");
+    if (todosDeshabilitados) {
+      bienvenidaElement.textContent += " - No hay enlaces disponibles";
+      bienvenidaElement.style.color = "orange";
+    } else {
+      console.log("Proceso completado exitosamente");
+    }
 
   } catch (error) {
     console.error("Error en la aplicación:", error);
