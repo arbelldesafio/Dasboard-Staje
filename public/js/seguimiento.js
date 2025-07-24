@@ -46,12 +46,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     // Usando los nombres exactos de las propiedades que devuelve la API
-    asignarEnlaceSeguro("links-nuevas1", data.links.nuevas1);
-    asignarEnlaceSeguro("links-nuevas2", data.links.nuevas2);
-    asignarEnlaceSeguro("links-incorpo1", data.links.incorpo1);
-    asignarEnlaceSeguro("links-incorpo2", data.links.incorpo2);
-
-    console.log("Enlaces asignados correctamente");
+    asignarEnlaceSeguro("nuevas1", data.links.nuevas1);
+    asignarEnlaceSeguro("nuevas2", data.links.nuevas2);
+    asignarEnlaceSeguro("incorpo1", data.links.incorpo1);
+    asignarEnlaceSeguro("incorpo2", data.links.incorpo2);
+log("Enlaces ");
 
   } catch (error) {
     console.error("Error:", error);
