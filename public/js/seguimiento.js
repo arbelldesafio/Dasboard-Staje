@@ -1,22 +1,34 @@
+  function obtenerNombreHoja(categoria) {
+    const categoriaNormalizada = categoria?.toLowerCase();
+    if (categoriaNormalizada === '3y4') return 'Periodo 3 y 4';
+    if (categoriaNormalizada === '4y5') return 'Periodo 4 y 5';
+    return null; 
+  }
+
   document.addEventListener("DOMContentLoaded", async () => {
     const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
-    const categoria = new URLSearchParams(window.location.search).get("categoria")?.toUpperCase() || "3Y4";
-
+    const categoriaRaw = new URLSearchParams(window.location.search).get("categoria");
+    const categoria = categoriaRaw?.toLowerCase().trim();
 
     console.log("Distribuidor:", distribuidor);
     console.log("Categoría recibida:", categoria);
 
-    
-    // URLs de tus 2 GAS (cada uno vinculado a su Sheet respectivo)
+    const hoja = obtenerNombreHoja(categoria);
+    if (!hoja) {
+      alert("Categoría inválida.");
+      return;
+    }
+
     const urls  = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
       "4y5": "https://script.google.com/macros/s/AKfycbxqJuHmvFxoX6FOeIZMmLo1taBBVrBJtZZ_H9S265HXLsy00dD38bJivkJMyKcw7VyzEA/exec"
     };
 
       const url = urls[categoria];
-        console.log("URL seleccionada:", url);
+    console.log("URL seleccionada:", url);
+
     if (!url) {
-      alert("Categoría inválida.");
+      alert("URL no definida para esta categoría.");
       return;
     }
 
@@ -28,9 +40,9 @@
         throw new Error(data.error || "Error desconocido");
       }
 
-      console.log("Links recibidos:", data.links); // 🔍 para depurar
+      console.log("Links recibidos:", data.links);
 
-      // Aquí mostrarías los enlaces, por ejemplo:
+      // Mostrar enlaces
       document.getElementById("nuevas1").href = data.links.nuevas1;
       document.getElementById("nuevas2").href = data.links.nuevas2;
       document.getElementById("incorpo1").href = data.links.incorpo1;
