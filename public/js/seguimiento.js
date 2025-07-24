@@ -1,14 +1,15 @@
-  function obtenerNombreHoja(categoria) {
-    const categoriaNormalizada = categoria?.toLowerCase();
-    if (categoriaNormalizada === '3y4') return 'Periodo 3 y 4';
-    if (categoriaNormalizada === '4y5') return 'Periodo 4 y 5';
-    return null; 
-  }
+document.addEventListener("DOMContentLoaded", async () => {
+  const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
+  const categoria = new URLSearchParams(window.location.search).get("categoria")?.toLowerCase().trim();
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    const distribuidor = localStorage.getItem("distribuidor")?.toUpperCase();
-    const categoriaRaw = new URLSearchParams(window.location.search).get("categoria");
-    const categoria = categoriaRaw?.toLowerCase().trim();
+  // Lista de categorías permitidas
+  const categoriasPermitidas = ["3y4", "4y5"];
+
+  if (!categoria || !categoriasPermitidas.includes(categoria)) {
+    alert(`Categoría inválida. Usá: ${categoriasPermitidas.join(" o ")}`);
+    window.location.href = `/dashboard.html`; // Redirige a una página segura
+    return;
+  }
 
     console.log("Distribuidor:", distribuidor);
     console.log("Categoría recibida:", categoria);
