@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Configurar endpoints
     const endpoints = {
       "3y4": "https://script.google.com/macros/s/AKfycbwKBVGe_QZrvgXt0g0ayY3rbWMW8ekYojdii-r3oRCB90UqhJvQdDhCf3jlLOP0IRHb/exec",
-      "4y5": "https://script.google.com/macros/s/AKfycbyAElkQJvT0GupUiPhtiI_XYAHHxPGvgEugKiSBmcN3dCzz0mdkLw4uu97G-9IsHlB8kA/exec"
+      "4y5": "https://script.google.com/macros/s/AKfycbxllhyViPm9V52g3-JtPTNBnU_h5TgVTmgMbgbAJ-bAKQqC_5t16pk7cYGJSQBKEGdFEw/exec"
     };
 
     const endpoint = endpoints[categoria];
