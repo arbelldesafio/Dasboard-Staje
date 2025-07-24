@@ -26,18 +26,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     const endpoint = endpoints[categoria];
     if (!endpoint) throw new Error("Endpoint no configurado");
 
-    // 4. Obtener datos de la API
-    const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
-    const response = await fetch(apiUrl);
+    // 4. Obtener datos de la API (con reintento automático)
+    let data;
+    let intentos = 0;
+    const maxIntentos = 2;
     
-    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-    
-    const data = await response.json();
-    console.log("Datos recibidos:", data);
+    while (intentos < maxIntentos) {
+      try {
+        const apiUrl = `${endpoint}?distribuidor=${encodeURIComponent(distribuidorNormalizado)}`;
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        
+        data = await response.json();
+        console.log("Datos recibidos:", data);
 
-    if (!data.success) throw new Error(data.error || "Error en la API");
+        if (!data.success) throw new Error(data.error || "Error en la API");
+        break; // Salir del bucle si todo está bien
+      } catch (error) {
+        intentos++;
+        if (intentos >= maxIntentos) throw error;
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo antes de reintentar
+      }
+    }
 
-    // 5. Asignar enlaces (estructura consistente para ambos períodos)
+    // 5. Función mejorada para asignar enlaces
     const asignarEnlace = (id, url) => {
       const elemento = document.getElementById(id);
       if (!elemento) {
@@ -45,24 +58,49 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
       
-      if (!url) {
+      // Solo deshabilitar si es un botón sin enlace
+      if (elemento.tagName === 'BUTTON' && !url) {
+        elemento.disabled = true;
         elemento.style.opacity = "0.6";
         elemento.style.cursor = "not-allowed";
-        elemento.onclick = (e) => e.preventDefault();
-        elemento.title = "Enlace no disponible";
-        return;
+        elemento.title = "Opción no disponible";
+      } else if (elemento.tagName === 'A') {
+        if (url) {
+          elemento.href = url;
+          elemento.style.opacity = "1";
+          elemento.style.cursor = "pointer";
+        } else {
+          elemento.style.opacity = "0.6";
+          elemento.style.cursor = "not-allowed";
+          elemento.onclick = (e) => {
+            e.preventDefault();
+            alert("Esta opción no está disponible actualmente");
+          };
+          elemento.title = "Enlace no disponible";
+        }
       }
-      
-      elemento.href = url;
-      elemento.style.opacity = "1";
-      elemento.style.cursor = "pointer";
     };
 
-    // Asignación para ambos períodos (misma estructura)
+    // Asignación de enlaces
     asignarEnlace("nuevas1", data.links.nuevas1);
     asignarEnlace("nuevas2", data.links.nuevas2);
     asignarEnlace("incorpo1", data.links.incorpo1);
     asignarEnlace("incorpo2", data.links.incorpo2);
+
+    // Solución para el bug de doble clic
+    document.querySelectorAll('a, button').forEach(elemento => {
+      elemento.addEventListener('click', function(e) {
+        if (this.disabled || this.style.cursor === 'not-allowed') {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+        
+        // Agregar clase de carga temporal
+        this.classList.add('loading');
+        setTimeout(() => this.classList.remove('loading'), 1000);
+      }, { once: true }); // El evento se ejecuta solo una vez
+    });
 
   } catch (error) {
     console.error("Error:", error);
@@ -72,11 +110,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       bienvenidaElement.style.color = "red";
     }
     
-    // Botón de reintento
+    // Botón de reintento mejorado
     const boton = document.createElement("button");
     boton.textContent = "Reintentar";
     boton.className = "boton-link";
-    boton.onclick = () => window.location.reload();
-    document.querySelector(".seccion")?.appendChild(boton);
+    boton.onclick = () => {
+      boton.textContent = "Cargando...";
+      boton.disabled = true;
+      window.location.reload();
+    };
+    
+    const seccion = document.querySelector(".seccion");
+    if (seccion) {
+      // Limpiar botones anteriores
+      const botonesAnteriores = seccion.querySelectorAll('button.boton-link');
+      botonesAnteriores.forEach(b => b.remove());
+      
+      seccion.appendChild(boton);
+    }
   }
 });
